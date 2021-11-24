@@ -102,7 +102,7 @@ verticalAdjacent : Int -> Int -> Int -> Int -> Bool
 verticalAdjacent columns rows i j =
     let
         rowOfI =
-            modBy rows i
+            i // columns
     in
     (rowOfI == 0 && j == i + columns)
         || (rowOfI == rows - 1 && j == i - columns)
