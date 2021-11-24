@@ -1,7 +1,11 @@
-module Puzzle exposing (Cell(..), Msg, Puzzle, isSolved, new, slide, update)
+module Puzzle exposing (Cell(..), CellConfiguration, Configuration, Msg, Puzzle, isSolved, new, slide, update, view)
 
 import Array exposing (Array)
-import Array.Util exposing (all, find, zip)
+import Array.Util as Util exposing (find, zip)
+import Css exposing (..)
+import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as Attribute
+import Html.Styled.Events as Event
 
 
 type Puzzle
@@ -49,7 +53,7 @@ isSolved (Puzzle { columns, rows, state }) =
             left == right
     in
     zip fresh state
-        |> all equal
+        |> Util.all equal
 
 
 slide : Cell -> Puzzle -> Puzzle
@@ -142,3 +146,67 @@ update message puzzle =
     case message of
         Slide cell ->
             slide cell puzzle
+
+
+type alias Configuration =
+    { cell : CellConfiguration
+    }
+
+
+view : Configuration -> Puzzle -> Html Msg
+view configuration (Puzzle { columns, rows, state }) =
+    let
+        cells =
+            state
+                |> Array.map (viewCell configuration.cell)
+                |> Array.toList
+                |> Html.div
+                    [ Attribute.css
+                        [ displayFlex
+                        , flexWrap wrap
+                        , boxSizing contentBox
+                        , width <| px <| configuration.cell.size * toFloat columns
+                        , height <| px <| configuration.cell.size * toFloat rows
+                        ]
+                    ]
+    in
+    Html.div []
+        [ cells
+        ]
+
+
+type alias CellConfiguration =
+    { size : Float }
+
+
+viewCell : CellConfiguration -> Cell -> Html Msg
+viewCell configuration cell =
+    let
+        hint =
+            case cell of
+                Blank ->
+                    ""
+
+                Cell index ->
+                    String.fromInt (index + 1)
+    in
+    Html.span
+        [ Attribute.css
+            [ displayFlex
+            , justifyContent center
+            , alignItems center
+            , boxSizing borderBox
+            , width (px configuration.size)
+            , height (px configuration.size)
+            , borderStyle solid
+            , borderWidth (px 1)
+            , borderColor (gray 155)
+            ]
+        , Event.onClick <| Slide cell
+        ]
+        [ Html.text hint ]
+
+
+gray : Int -> Color
+gray g =
+    rgb g g g
