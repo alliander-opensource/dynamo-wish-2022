@@ -1,4 +1,4 @@
-module Puzzle exposing (Cell(..), CellConfiguration, Configuration, Msg, Puzzle, isSolved, new, slide, update, view)
+module Puzzle exposing (Cell(..), CellConfiguration, Configuration, Msg, Puzzle, isSolved, new, shuffle, slide, update, view)
 
 import Array exposing (Array)
 import Array.Util as Util exposing (find, zip)
@@ -6,6 +6,7 @@ import Css exposing (..)
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attribute
 import Html.Styled.Events as Event
+import Random exposing (Generator)
 
 
 type Puzzle
@@ -135,6 +136,32 @@ swap left right ((Puzzle ({ state } as puzzle)) as original) =
 
         _ ->
             original
+
+
+shuffle : Puzzle -> Generator Puzzle
+shuffle ((Puzzle { columns, rows }) as puzzle) =
+    let
+        n =
+            columns * rows
+
+        cell =
+            Random.uniform Blank <| (List.range 0 (n - 1) |> List.map Cell)
+    in
+    List.range 22 50
+        |> List.filter isEven
+        |> Random.uniform 20
+        |> Random.andThen (\l -> Random.list l <| Random.pair cell cell)
+        |> Random.map (List.foldl (uncurry swap) puzzle)
+
+
+uncurry : (a -> b -> c) -> ( a, b ) -> c
+uncurry f ( a, b ) =
+    f a b
+
+
+isEven : Int -> Bool
+isEven n =
+    0 == modBy 2 n
 
 
 type Msg

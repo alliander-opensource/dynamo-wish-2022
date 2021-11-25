@@ -4,7 +4,9 @@ import Browser exposing (Document)
 import Css
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attributes
+import Html.Styled.Events as Event
 import Puzzle exposing (Puzzle)
+import Random
 
 
 main : Program () Model Msg
@@ -37,6 +39,8 @@ type alias Model =
 
 type Msg
     = PuzzleMsg Puzzle.Msg
+    | Shuffle
+    | Challenge Puzzle
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -49,16 +53,33 @@ update message model =
             in
             ( { model | puzzle = puzzle }, Cmd.none )
 
+        Shuffle ->
+            ( model, Random.generate Challenge <| Puzzle.shuffle model.puzzle )
+
+        Challenge puzzle ->
+            ( { model | puzzle = puzzle }, Cmd.none )
+
 
 view : Model -> Document Msg
 view model =
     { title = "Best wishes for 2022"
     , body =
-        [ Puzzle.view model.configuration model.puzzle
-            |> Html.map PuzzleMsg
-            |> Html.toUnstyled
+        [ viewControl model
+        , viewPuzzle model
         ]
+            |> List.map Html.toUnstyled
     }
+
+
+viewControl : Model -> Html Msg
+viewControl _ =
+    Html.div [ Event.onClick Shuffle ] [ Html.button [] [ Html.text "shuffle" ] ]
+
+
+viewPuzzle : Model -> Html Msg
+viewPuzzle model =
+    Puzzle.view model.configuration model.puzzle
+        |> Html.map PuzzleMsg
 
 
 subscriptions : Model -> Sub Msg
