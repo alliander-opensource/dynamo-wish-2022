@@ -22,16 +22,25 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     let
-        puzzle =
-            Puzzle.new 4 4
-
         configuration =
-            { cell = { size = 50 } }
+            { puzzle = { columns = 4, rows = 4 }
+            , cell = { size = 50 }
+            , shuffle = { minimum = 20, maximum = 50 }
+            }
+
+        puzzle =
+            Puzzle.new configuration.puzzle
     in
-    ( { puzzle = puzzle, configuration = configuration }, Cmd.none )
+    ( Initializing configuration, Random.generate Challenge <| Puzzle.shuffle configuration.shuffle puzzle )
 
 
-type alias Model =
+type Model
+    = Initializing Puzzle.Configuration
+    | Solving Data
+    | Solved Data
+
+
+type alias Data =
     { puzzle : Puzzle
     , configuration : Puzzle.Configuration
     }
@@ -47,17 +56,75 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
         PuzzleMsg msg ->
-            let
-                puzzle =
-                    Puzzle.update msg model.puzzle
-            in
-            ( { model | puzzle = puzzle }, Cmd.none )
+            puzzleOf model
+                |> Maybe.map (Puzzle.update msg)
+                |> Maybe.map (swap updatePuzzle <| model)
+                |> Maybe.withDefault ( model, Cmd.none )
 
         Shuffle ->
-            ( model, Random.generate Challenge <| Puzzle.shuffle model.puzzle )
+            let
+                shuffleCmd puzzle =
+                    puzzle
+                        |> Puzzle.shuffle (configurationOf model).shuffle
+                        |> Random.generate Challenge
+
+                cmd =
+                    puzzleOf model
+                        |> Maybe.map shuffleCmd
+                        |> Maybe.withDefault Cmd.none
+            in
+            ( model, cmd )
 
         Challenge puzzle ->
-            ( { model | puzzle = puzzle }, Cmd.none )
+            updatePuzzle puzzle model
+
+
+swap : (a -> b -> c) -> b -> a -> c
+swap f b a =
+    f a b
+
+
+puzzleOf : Model -> Maybe Puzzle
+puzzleOf model =
+    case model of
+        Initializing _ ->
+            Nothing
+
+        Solving data ->
+            Just data.puzzle
+
+        Solved data ->
+            Just data.puzzle
+
+
+configurationOf : Model -> Puzzle.Configuration
+configurationOf model =
+    case model of
+        Initializing configuration ->
+            configuration
+
+        Solving data ->
+            data.configuration
+
+        Solved data ->
+            data.configuration
+
+
+updatePuzzle : Puzzle -> Model -> ( Model, Cmd Msg )
+updatePuzzle puzzle model =
+    case model of
+        Initializing configuration ->
+            ( Solving { puzzle = puzzle, configuration = configuration }, Cmd.none )
+
+        Solving data ->
+            if Puzzle.isSolved puzzle then
+                ( Solved { data | puzzle = puzzle }, Cmd.none )
+
+            else
+                ( Solving { data | puzzle = puzzle }, Cmd.none )
+
+        Solved data ->
+            ( Solved { data | puzzle = puzzle }, Cmd.none )
 
 
 view : Model -> Document Msg
@@ -78,7 +145,10 @@ viewControl _ =
 
 viewPuzzle : Model -> Html Msg
 viewPuzzle model =
-    Puzzle.view model.configuration model.puzzle
+    model
+        |> puzzleOf
+        |> Maybe.map (Puzzle.view <| configurationOf model)
+        |> Maybe.withDefault (Html.div [] [])
         |> Html.map PuzzleMsg
 
 

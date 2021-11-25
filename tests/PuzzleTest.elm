@@ -18,18 +18,24 @@ suite =
             [ fuzz2 range range "a new puzzle is solved" <|
                 \columns rows ->
                     let
+                        configuration =
+                            { columns = columns, rows = rows }
+
                         puzzle =
-                            Puzzle.new columns rows
+                            Puzzle.new configuration
                     in
                     Expect.true "puzzle should be solved" <| Puzzle.isSolved puzzle
             , fuzz3 range range (Fuzz.intRange 0 (25 - 1)) "when a cell is slided twice puzzle should be solved" <|
                 \columns rows index ->
                     let
+                        configuration =
+                            { columns = columns, rows = rows }
+
                         cell =
                             Cell index
 
                         puzzle =
-                            Puzzle.new columns rows
+                            Puzzle.new configuration
                                 |> slide cell
                                 |> slide cell
                     in

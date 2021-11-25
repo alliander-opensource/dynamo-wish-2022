@@ -1,4 +1,4 @@
-module Puzzle exposing (Cell(..), CellConfiguration, Configuration, Msg, Puzzle, isSolved, new, shuffle, slide, update, view)
+module Puzzle exposing (Cell(..), CellConfiguration, Configuration, Msg, Puzzle, PuzzleConfiguration, ShuffleConfiguration, isSolved, new, shuffle, slide, update, view)
 
 import Array exposing (Array)
 import Array.Util as Util exposing (find, zip)
@@ -22,8 +22,31 @@ type Cell
     | Cell Int
 
 
-new : Int -> Int -> Puzzle
-new columns rows =
+type alias Configuration =
+    { puzzle : PuzzleConfiguration
+    , cell : CellConfiguration
+    , shuffle : ShuffleConfiguration
+    }
+
+
+type alias PuzzleConfiguration =
+    { columns : Int
+    , rows : Int
+    }
+
+
+type alias CellConfiguration =
+    { size : Float }
+
+
+type alias ShuffleConfiguration =
+    { minimum : Int
+    , maximum : Int
+    }
+
+
+new : PuzzleConfiguration -> Puzzle
+new { columns, rows } =
     Puzzle
         { columns = columns
         , rows = rows
@@ -138,18 +161,28 @@ swap left right ((Puzzle ({ state } as puzzle)) as original) =
             original
 
 
-shuffle : Puzzle -> Generator Puzzle
-shuffle ((Puzzle { columns, rows }) as puzzle) =
+shuffle : ShuffleConfiguration -> Puzzle -> Generator Puzzle
+shuffle configuration ((Puzzle { columns, rows }) as puzzle) =
     let
         n =
             columns * rows
 
         cell =
             Random.uniform Blank <| (List.range 0 (n - 1) |> List.map Cell)
+
+        minimum =
+            if isEven configuration.minimum then
+                configuration.minimum
+
+            else
+                configuration.minimum + 1
+
+        maximum =
+            max (minimum + 2) configuration.maximum
     in
-    List.range 22 50
+    List.range (minimum + 2) maximum
         |> List.filter isEven
-        |> Random.uniform 20
+        |> Random.uniform minimum
         |> Random.andThen (\l -> Random.list l <| Random.pair cell cell)
         |> Random.map (List.foldl (uncurry swap) puzzle)
 
@@ -175,11 +208,6 @@ update message puzzle =
             slide cell puzzle
 
 
-type alias Configuration =
-    { cell : CellConfiguration
-    }
-
-
 view : Configuration -> Puzzle -> Html Msg
 view configuration (Puzzle { columns, rows, state }) =
     let
@@ -200,10 +228,6 @@ view configuration (Puzzle { columns, rows, state }) =
     Html.div []
         [ cells
         ]
-
-
-type alias CellConfiguration =
-    { size : Float }
 
 
 viewCell : CellConfiguration -> Cell -> Html Msg
