@@ -6,6 +6,7 @@ import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attributes
 import Html.Styled.Events as Event
 import Puzzle exposing (Puzzle)
+import Puzzle.Configuration as Configuration
 import Random
 
 
@@ -35,14 +36,14 @@ init _ =
 
 
 type Model
-    = Initializing Puzzle.Configuration
+    = Initializing Configuration.Main
     | Solving Data
     | Solved Data
 
 
 type alias Data =
     { puzzle : Puzzle
-    , configuration : Puzzle.Configuration
+    , configuration : Configuration.Main
     }
 
 

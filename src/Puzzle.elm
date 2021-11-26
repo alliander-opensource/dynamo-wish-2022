@@ -1,4 +1,4 @@
-module Puzzle exposing (Cell(..), CellConfiguration, Configuration, Msg, Puzzle, PuzzleConfiguration, ShuffleConfiguration, isSolved, new, shuffle, slide, update, view)
+module Puzzle exposing (Cell(..), Msg, Puzzle, isSolved, new, shuffle, slide, update, view)
 
 import Array exposing (Array)
 import Array.Util as Util exposing (find, zip)
@@ -6,6 +6,8 @@ import Css exposing (..)
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attribute
 import Html.Styled.Events as Event
+import Json.Decode exposing (Decoder)
+import Puzzle.Configuration as Configuration
 import Random exposing (Generator)
 
 
@@ -22,30 +24,7 @@ type Cell
     | Cell Int
 
 
-type alias Configuration =
-    { puzzle : PuzzleConfiguration
-    , cell : CellConfiguration
-    , shuffle : ShuffleConfiguration
-    }
-
-
-type alias PuzzleConfiguration =
-    { columns : Int
-    , rows : Int
-    }
-
-
-type alias CellConfiguration =
-    { size : Float }
-
-
-type alias ShuffleConfiguration =
-    { minimum : Int
-    , maximum : Int
-    }
-
-
-new : PuzzleConfiguration -> Puzzle
+new : Configuration.Puzzle -> Puzzle
 new { columns, rows } =
     Puzzle
         { columns = columns
@@ -161,7 +140,7 @@ swap left right ((Puzzle ({ state } as puzzle)) as original) =
             original
 
 
-shuffle : ShuffleConfiguration -> Puzzle -> Generator Puzzle
+shuffle : Configuration.Shuffle -> Puzzle -> Generator Puzzle
 shuffle configuration ((Puzzle { columns, rows }) as puzzle) =
     let
         n =
@@ -208,7 +187,7 @@ update message puzzle =
             slide cell puzzle
 
 
-view : Configuration -> Puzzle -> Html Msg
+view : Configuration.Main -> Puzzle -> Html Msg
 view configuration (Puzzle { columns, rows, state }) =
     let
         cells =
@@ -230,7 +209,7 @@ view configuration (Puzzle { columns, rows, state }) =
         ]
 
 
-viewCell : CellConfiguration -> Cell -> Html Msg
+viewCell : Configuration.Cell -> Cell -> Html Msg
 viewCell configuration cell =
     let
         hint =
