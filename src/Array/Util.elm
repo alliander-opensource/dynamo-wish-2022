@@ -1,4 +1,4 @@
-module Array.Util exposing (all, zip, find)
+module Array.Util exposing (all, find, zip)
 
 import Array exposing (Array)
 import List.Util as Util
@@ -25,10 +25,11 @@ all predicate xs =
         |> Array.toList
         |> List.all predicate
 
+
 find : a -> Array a -> Maybe Int
 find needle haystack =
     haystack
         |> Array.indexedMap Tuple.pair
-        |> Array.filter (Tuple.second >> ((==) needle))
+        |> Array.filter (Tuple.second >> (==) needle)
         |> Array.map Tuple.first
         |> Array.get 0

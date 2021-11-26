@@ -1,7 +1,7 @@
 module Array.UtilTest exposing (..)
 
 import Array
-import Array.Util exposing (all, zip, find)
+import Array.Util exposing (all, find, zip)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
@@ -72,8 +72,8 @@ suite =
                                 [ 'a', 'b', 'c' ]
                                     |> Array.fromList
 
-                            needle = 'b'
-
+                            needle =
+                                'b'
                         in
                         Expect.equal (Just 1) <| find needle haystack
                 ]
