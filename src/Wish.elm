@@ -5,6 +5,7 @@ import Css
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attributes
 import Html.Styled.Events as Event
+import Json.Decode as Json
 import Puzzle exposing (Puzzle)
 import Puzzle.Configuration as Configuration
 import Random
@@ -23,11 +24,20 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     let
-        configuration =
+        default =
             { puzzle = { columns = 4, rows = 4 }
             , cell = { size = 50 }
             , shuffle = { minimum = 20, maximum = 50 }
             }
+
+        configuration =
+            """{
+            "puzzle": {"columns": 4, "rows": 4},
+            "cell": {"size": 50},
+            "shuffle": {"minimum": 20, "maximum": 50}
+            }"""
+                |> Json.decodeString Configuration.decode
+                |> Result.withDefault default
 
         puzzle =
             Puzzle.new configuration.puzzle
@@ -98,7 +108,7 @@ puzzleOf model =
             Just data.puzzle
 
 
-configurationOf : Model -> Puzzle.Configuration
+configurationOf : Model -> Configuration.Main
 configurationOf model =
     case model of
         Initializing configuration ->
