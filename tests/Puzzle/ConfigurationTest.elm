@@ -18,7 +18,7 @@ suite =
                             input =
                                 """{
                                     "puzzle": {"columns": 4, "rows": 4},
-                                    "cell": {"size": 50, "image": "image/test.png"},
+                                    "cell": {"size": 50, "image": {"src": "image/test.png", "width": 10, "height": 20}},
                                     "shuffle": {"minimum": 20, "maximum": 50}
                                     }"""
 
@@ -28,7 +28,7 @@ suite =
                             expected =
                                 Ok
                                     { puzzle = { columns = 4, rows = 4 }
-                                    , cell = { size = 50, image = "image/test.png" }
+                                    , cell = { size = 50, image = { src = "image/test.png", width = 10, height = 20 } }
                                     , shuffle = { minimum = 20, maximum = 50 }
                                     }
                         in

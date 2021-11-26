@@ -18,7 +18,14 @@ type alias Puzzle =
 
 type alias Cell =
     { size : Float
-    , image : String
+    , image : Image
+    }
+
+
+type alias Image =
+    { src : String
+    , width : Int
+    , height : Int
     }
 
 
@@ -47,7 +54,15 @@ decodeCell : Decoder Cell
 decodeCell =
     Decode.map2 Cell
         (field "size" float)
-        (field "image" string)
+        (field "image" decodeImage)
+
+
+decodeImage : Decoder Image
+decodeImage =
+    Decode.map3 Image
+        (field "src" string)
+        (field "width" int)
+        (field "height" int)
 
 
 decodeShuffle : Decoder Shuffle

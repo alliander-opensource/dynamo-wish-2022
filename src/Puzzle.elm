@@ -191,7 +191,7 @@ view configuration (Puzzle { columns, rows, state }) =
     let
         cells =
             state
-                |> Array.map (viewCell configuration.cell)
+                |> Array.map (viewCell configuration)
                 |> Array.toList
                 |> Html.div
                     [ Attribute.css
@@ -208,7 +208,7 @@ view configuration (Puzzle { columns, rows, state }) =
         ]
 
 
-viewCell : Configuration.Cell -> Cell -> Html Msg
+viewCell : Configuration.Main -> Cell -> Html Msg
 viewCell configuration cell =
     let
         hint =
@@ -218,21 +218,35 @@ viewCell configuration cell =
 
                 Cell index ->
                     String.fromInt (index + 1)
+
+        size =
+            configuration.cell.size
+
+        background =
+            case cell of
+                Blank ->
+                    []
+
+                Cell index ->
+                    [ backgroundImage (url configuration.cell.image.src)
+                    , backgroundPosition2 (px 0) (px 0)
+                    ]
     in
     Html.span
-        [ Attribute.css
-            [ displayFlex
-            , justifyContent center
-            , alignItems center
-            , boxSizing borderBox
-            , width (px configuration.size)
-            , height (px configuration.size)
-            , borderStyle solid
-            , borderWidth (px 1)
-            , borderColor (gray 155)
-            , backgroundImage (url configuration.image)
-            , backgroundPosition2 (px 0) (px 0)
-            ]
+        [ Attribute.css <|
+            List.concat
+                [ [ displayFlex
+                  , justifyContent center
+                  , alignItems center
+                  , boxSizing borderBox
+                  , width (px size)
+                  , height (px size)
+                  , borderStyle solid
+                  , borderWidth (px 1)
+                  , borderColor (gray 155)
+                  ]
+                , background
+                ]
         , Event.onClick <| Slide cell
         ]
         [ Html.text hint ]

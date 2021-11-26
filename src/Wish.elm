@@ -25,7 +25,7 @@ init _ =
         input =
             """{
             "puzzle": {"columns": 4, "rows": 4},
-            "cell": {"size": 50, "image": "../docs/image/star.jpg"},
+            "cell": {"size": 50, "image": {"src": "../docs/image/star.jpg", "width": 197, "height": 197}},
             "shuffle": {"minimum": 20, "maximum": 50}
             }"""
     in
@@ -171,8 +171,11 @@ viewBody model =
 
 
 viewFailure : Json.Error -> Html Msg
-viewFailure _ =
-    Html.div [] [ Html.p [] [ Html.text "Problem decoding the configuration" ] ]
+viewFailure problem =
+    Html.div []
+        [ Html.p [] [ Html.text "Problem decoding the configuration" ]
+        , Html.pre [] [ Html.text <| Json.errorToString problem ]
+        ]
 
 
 viewInitializing : Configuration.Main -> Html Msg
