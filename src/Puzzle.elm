@@ -6,7 +6,6 @@ import Css exposing (..)
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attribute
 import Html.Styled.Events as Event
-import Json.Decode exposing (Decoder)
 import Puzzle.Configuration as Configuration
 import Random exposing (Generator)
 

@@ -1,9 +1,7 @@
 module Wish exposing (..)
 
 import Browser exposing (Document)
-import Css
 import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes as Attributes
 import Html.Styled.Events as Event
 import Json.Decode as Json
 import Puzzle exposing (Puzzle)
@@ -27,7 +25,7 @@ init _ =
         input =
             """{
             "puzzle": {"columns": 4, "rows": 4},
-            "cell": {"size": 50},
+            "cell": {"size": 50, "image": "image/star.jpg"},
             "shuffle": {"minimum": 20, "maximum": 50}
             }"""
     in

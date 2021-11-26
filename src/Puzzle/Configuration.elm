@@ -1,6 +1,6 @@
 module Puzzle.Configuration exposing (Cell, Main, Puzzle, Shuffle, decode)
 
-import Json.Decode as Decode exposing (Decoder, field, float, int)
+import Json.Decode as Decode exposing (Decoder, field, float, int, string)
 
 
 type alias Main =
@@ -17,7 +17,9 @@ type alias Puzzle =
 
 
 type alias Cell =
-    { size : Float }
+    { size : Float
+    , image : String
+    }
 
 
 type alias Shuffle =
@@ -43,8 +45,9 @@ decodePuzzle =
 
 decodeCell : Decoder Cell
 decodeCell =
-    Decode.map Cell
+    Decode.map2 Cell
         (field "size" float)
+        (field "image" string)
 
 
 decodeShuffle : Decoder Shuffle
