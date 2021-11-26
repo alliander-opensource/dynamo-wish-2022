@@ -25,7 +25,7 @@ init _ =
         input =
             """{
             "puzzle": {"columns": 4, "rows": 4},
-            "cell": {"size": 50, "image": "image/star.jpg"},
+            "cell": {"size": 50, "image": "../docs/image/star.jpg"},
             "shuffle": {"minimum": 20, "maximum": 50}
             }"""
     in

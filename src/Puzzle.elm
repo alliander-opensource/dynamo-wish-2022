@@ -230,6 +230,8 @@ viewCell configuration cell =
             , borderStyle solid
             , borderWidth (px 1)
             , borderColor (gray 155)
+            , backgroundImage (url configuration.image)
+            , backgroundPosition2 (px 0) (px 0)
             ]
         , Event.onClick <| Slide cell
         ]
