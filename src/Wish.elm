@@ -24,29 +24,28 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     let
-        default =
-            { puzzle = { columns = 4, rows = 4 }
-            , cell = { size = 50 }
-            , shuffle = { minimum = 20, maximum = 50 }
-            }
-
-        configuration =
+        input =
             """{
             "puzzle": {"columns": 4, "rows": 4},
             "cell": {"size": 50},
             "shuffle": {"minimum": 20, "maximum": 50}
             }"""
-                |> Json.decodeString Configuration.decode
-                |> Result.withDefault default
-
-        puzzle =
-            Puzzle.new configuration.puzzle
     in
-    ( Initializing configuration, Random.generate Challenge <| Puzzle.shuffle configuration.shuffle puzzle )
+    case Json.decodeString Configuration.decode input of
+        Ok configuration ->
+            let
+                puzzle =
+                    Puzzle.new configuration.puzzle
+            in
+            ( Initializing configuration, Random.generate Challenge <| Puzzle.shuffle configuration.shuffle puzzle )
+
+        Err problem ->
+            ( Failed problem, Cmd.none )
 
 
 type Model
-    = Initializing Configuration.Main
+    = Failed Json.Error
+    | Initializing Configuration.Main
     | Solving Data
     | Solved Data
 
@@ -75,13 +74,14 @@ update message model =
         Shuffle ->
             let
                 shuffleCmd puzzle =
-                    puzzle
-                        |> Puzzle.shuffle (configurationOf model).shuffle
-                        |> Random.generate Challenge
+                    configurationOf model
+                        |> Maybe.map .shuffle
+                        |> Maybe.map (\config -> Puzzle.shuffle config puzzle)
+                        |> Maybe.map (Random.generate Challenge)
 
                 cmd =
                     puzzleOf model
-                        |> Maybe.map shuffleCmd
+                        |> Maybe.andThen shuffleCmd
                         |> Maybe.withDefault Cmd.none
             in
             ( model, cmd )
@@ -98,6 +98,9 @@ swap f b a =
 puzzleOf : Model -> Maybe Puzzle
 puzzleOf model =
     case model of
+        Failed _ ->
+            Nothing
+
         Initializing _ ->
             Nothing
 
@@ -108,22 +111,28 @@ puzzleOf model =
             Just data.puzzle
 
 
-configurationOf : Model -> Configuration.Main
+configurationOf : Model -> Maybe Configuration.Main
 configurationOf model =
     case model of
+        Failed _ ->
+            Nothing
+
         Initializing configuration ->
-            configuration
+            Just configuration
 
         Solving data ->
-            data.configuration
+            Just data.configuration
 
         Solved data ->
-            data.configuration
+            Just data.configuration
 
 
 updatePuzzle : Puzzle -> Model -> ( Model, Cmd Msg )
 updatePuzzle puzzle model =
     case model of
+        Failed _ ->
+            ( model, Cmd.none )
+
         Initializing configuration ->
             ( Solving { puzzle = puzzle, configuration = configuration }, Cmd.none )
 
@@ -142,24 +151,47 @@ view : Model -> Document Msg
 view model =
     { title = "Best wishes for 2022"
     , body =
-        [ viewControl model
-        , viewPuzzle model
-        ]
+        viewBody model
             |> List.map Html.toUnstyled
     }
 
 
-viewControl : Model -> Html Msg
+viewBody : Model -> List (Html Msg)
+viewBody model =
+    case model of
+        Failed problem ->
+            [ viewFailure problem ]
+
+        Initializing configuration ->
+            [ viewInitializing configuration ]
+
+        Solving data ->
+            [ viewControl data, viewPuzzle data ]
+
+        Solved data ->
+            [ viewControl data, viewPuzzle data ]
+
+
+viewFailure : Json.Error -> Html Msg
+viewFailure _ =
+    Html.div [] [ Html.p [] [ Html.text "Problem decoding the configuration" ] ]
+
+
+viewInitializing : Configuration.Main -> Html Msg
+viewInitializing _ =
+    Html.div [] [ Html.p [] [ Html.text "Preparing wish" ] ]
+
+
+viewControl : Data -> Html Msg
 viewControl _ =
     Html.div [ Event.onClick Shuffle ] [ Html.button [] [ Html.text "shuffle" ] ]
 
 
-viewPuzzle : Model -> Html Msg
+viewPuzzle : Data -> Html Msg
 viewPuzzle model =
     model
-        |> puzzleOf
-        |> Maybe.map (Puzzle.view <| configurationOf model)
-        |> Maybe.withDefault (Html.div [] [])
+        |> .puzzle
+        |> (Puzzle.view <| model.configuration)
         |> Html.map PuzzleMsg
 
 
