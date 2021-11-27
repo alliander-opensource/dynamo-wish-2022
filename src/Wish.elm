@@ -7,6 +7,7 @@ import Json.Decode as Json
 import Puzzle exposing (Puzzle)
 import Puzzle.Configuration as Configuration
 import Random
+import Task
 
 
 main : Program () Model Msg
@@ -35,6 +36,7 @@ init _ =
                 puzzle =
                     Puzzle.new configuration.puzzle
             in
+            -- ( Initializing configuration, Task.perform Challenge <| Task.succeed puzzle )
             ( Initializing configuration, Random.generate Challenge <| Puzzle.shuffle configuration.shuffle puzzle )
 
         Err problem ->

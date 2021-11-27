@@ -158,6 +158,7 @@ shuffle configuration ((Puzzle { columns, rows }) as puzzle) =
         maximum =
             max (minimum + 2) configuration.maximum
     in
+    -- TODO In the unlikely event that the cell generator produces the same cell twice, the parity of the permutation is off.
     List.range (minimum + 2) maximum
         |> List.filter isEven
         |> Random.uniform minimum
@@ -217,10 +218,19 @@ viewCell configuration cell =
                     ""
 
                 Cell index ->
-                    String.fromInt (index + 1)
+                    String.fromInt <| index + 1
 
-        size =
-            configuration.cell.size
+        columns =
+            configuration.puzzle.columns
+
+        rows =
+            configuration.puzzle.rows
+
+        h =
+            toFloat configuration.cell.image.height / toFloat rows
+
+        w =
+            toFloat configuration.cell.image.width / toFloat columns
 
         background =
             case cell of
@@ -228,22 +238,41 @@ viewCell configuration cell =
                     []
 
                 Cell index ->
+                    let
+                        dx =
+                            index
+                                |> modBy columns
+                                |> toFloat
+                                |> (*) w
+                                |> negate
+
+                        row =
+                            index // columns
+
+                        dy =
+                            row
+                                |> toFloat
+                                |> (*) h
+                                |> negate
+                    in
                     [ backgroundImage (url configuration.cell.image.src)
-                    , backgroundPosition2 (px 0) (px 0)
+                    , backgroundPosition2 (px dx) (px dy)
                     ]
     in
     Html.span
         [ Attribute.css <|
             List.concat
                 [ [ displayFlex
-                  , justifyContent center
-                  , alignItems center
+                  , justifyContent left
+                  , alignItems top
                   , boxSizing borderBox
-                  , width (px size)
-                  , height (px size)
+                  , width (px w)
+                  , height (px h)
                   , borderStyle solid
                   , borderWidth (px 1)
                   , borderColor (gray 155)
+                  , color (gray 255)
+                  , fontSize (px 10)
                   ]
                 , background
                 ]
