@@ -212,13 +212,17 @@ view configuration (Puzzle { columns, rows, state }) =
 viewCell : Configuration.Main -> Cell -> Html Msg
 viewCell configuration cell =
     let
-        hint =
-            case cell of
-                Blank ->
-                    ""
+        indicesHint =
+            if configuration.hints.indices then
+                case cell of
+                    Blank ->
+                        ""
 
-                Cell index ->
-                    String.fromInt <| index + 1
+                    Cell index ->
+                        String.fromInt <| index + 1
+
+            else
+                ""
 
         columns =
             configuration.puzzle.columns
@@ -278,7 +282,7 @@ viewCell configuration cell =
                 ]
         , Event.onClick <| Slide cell
         ]
-        [ Html.text hint ]
+        [ Html.text indicesHint ]
 
 
 gray : Int -> Color

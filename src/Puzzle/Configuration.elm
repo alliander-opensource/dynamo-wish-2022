@@ -1,7 +1,7 @@
-module Puzzle.Configuration exposing (Cell, Main, Puzzle, Shuffle, decode)
+module Puzzle.Configuration exposing (Cell, Hint, Main, Puzzle, Shuffle, decode)
 
 import Base64
-import Json.Decode as Decode exposing (Decoder, field, float, int, string)
+import Json.Decode as Decode exposing (Decoder, bool, field, float, int, string)
 
 
 type alias Main =
@@ -9,6 +9,7 @@ type alias Main =
     , cell : Cell
     , shuffle : Shuffle
     , wish : Wish
+    , hints : Hint
     }
 
 
@@ -41,13 +42,18 @@ type alias Wish =
     { message : String }
 
 
+type alias Hint =
+    { indices : Bool }
+
+
 decode : Decoder Main
 decode =
-    Decode.map4 Main
+    Decode.map5 Main
         (field "puzzle" decodePuzzle)
         (field "cell" decodeCell)
         (field "shuffle" decodeShuffle)
         (field "wish" decodeWish)
+        (field "hints" decodeHint)
 
 
 decodePuzzle : Decoder Puzzle
@@ -102,3 +108,9 @@ base64EncodedString =
     in
     string
         |> Decode.andThen decoder
+
+
+decodeHint : Decoder Hint
+decodeHint =
+    Decode.map Hint
+        (field "indices" bool)

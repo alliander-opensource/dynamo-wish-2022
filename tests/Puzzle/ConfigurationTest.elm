@@ -20,7 +20,8 @@ suite =
                                     "puzzle": {"columns": 4, "rows": 4},
                                     "cell": {"size": 50, "image": {"src": "image/test.png", "width": 10, "height": 20}},
                                     "shuffle": {"minimum": 20, "maximum": 50},
-                                    "wish": {"message": "SGVsbG8sIFdvcmxkIQo="}
+                                    "wish": {"message": "SGVsbG8sIFdvcmxkIQo="},
+                                    "hints": {"indices": true}
                                     }"""
 
                             actual =
@@ -32,6 +33,7 @@ suite =
                                     , cell = { size = 50, image = { src = "image/test.png", width = 10, height = 20 } }
                                     , shuffle = { minimum = 20, maximum = 50 }
                                     , wish = { message = "Hello, World!\n" }
+                                    , hints = { indices = True }
                                     }
                         in
                         Expect.equal actual expected

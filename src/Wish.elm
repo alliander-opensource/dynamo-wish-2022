@@ -2,12 +2,14 @@ module Wish exposing (..)
 
 import Browser exposing (Document)
 import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as Attribute
 import Html.Styled.Events as Event
 import Json.Decode as Json
+import Markdown
 import Puzzle exposing (Puzzle)
 import Puzzle.Configuration as Configuration
 import Random
-import Markdown
+
 
 main : Program () Model Msg
 main =
@@ -27,7 +29,8 @@ init _ =
             "puzzle": {"columns": 4, "rows": 4},
             "cell": {"size": 50, "image": {"src": "../docs/image/star.jpg", "width": 197, "height": 197}},
             "shuffle": {"minimum": 20, "maximum": 50},
-            "wish": {"message": "SGVsbG8sIFdvcmxkIQo="}
+            "wish": {"message": "SGVsbG8sIFdvcmxkIQo="},
+            "hints": {"indices": false}
             }"""
     in
     case Json.decodeString Configuration.decode input of
@@ -60,6 +63,7 @@ type Msg
     = PuzzleMsg Puzzle.Msg
     | Shuffle
     | Challenge Puzzle
+    | ToggleIndicesHint Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -88,6 +92,9 @@ update message model =
 
         Challenge puzzle ->
             updatePuzzle puzzle model
+
+        ToggleIndicesHint indices ->
+            updateIndicesHint indices model
 
 
 swap : (a -> b -> c) -> b -> a -> c
@@ -147,6 +154,46 @@ updatePuzzle puzzle model =
             ( Solved { data | puzzle = puzzle }, Cmd.none )
 
 
+updateIndicesHint : Bool -> Model -> ( Model, Cmd Msg )
+updateIndicesHint indices model =
+    let
+        updateData data =
+            let
+                old =
+                    data.configuration.hints
+
+                hints =
+                    { old | indices = indices }
+
+                oldConfiguration =
+                    data.configuration
+
+                configuration =
+                    { oldConfiguration | hints = hints }
+            in
+            { data | configuration = configuration }
+    in
+    case model of
+        Failed _ ->
+            ( model, Cmd.none )
+
+        Initializing configuration ->
+            let
+                old =
+                    configuration.hints
+
+                hints =
+                    { old | indices = indices }
+            in
+            ( Initializing { configuration | hints = hints }, Cmd.none )
+
+        Solving data ->
+            ( Solving <| updateData data, Cmd.none )
+
+        Solved data ->
+            ( Solved <| updateData data, Cmd.none )
+
+
 view : Model -> Document Msg
 view model =
     { title = "Best wishes for 2022"
@@ -186,8 +233,25 @@ viewInitializing _ =
 
 
 viewControl : Data -> Html Msg
-viewControl _ =
-    Html.div [ Event.onClick Shuffle ] [ Html.button [] [ Html.text "shuffle" ] ]
+viewControl data =
+    Html.div [] <|
+        Html.button [ Event.onClick Shuffle ] [ Html.text "shuffle" ]
+            :: viewHints data.configuration.hints
+
+
+viewHints : Configuration.Hint -> List (Html Msg)
+viewHints { indices } =
+    [ Html.span []
+        [ Html.label [ Attribute.for "indices" ] [ Html.text "show indices" ]
+        , Html.input
+            [ Event.onCheck ToggleIndicesHint
+            , Attribute.type_ "checkbox"
+            , Attribute.checked indices
+            , Attribute.id "indices"
+            ]
+            []
+        ]
+    ]
 
 
 viewPuzzle : Data -> Html Msg
@@ -201,11 +265,12 @@ viewPuzzle model =
 viewWish : Data -> Html Msg
 viewWish model =
     model
-    |> .configuration
-    |> .wish
-    |> .message
-    |> Markdown.toHtml []
-    |> Html.fromUnstyled
+        |> .configuration
+        |> .wish
+        |> .message
+        |> Markdown.toHtml []
+        |> Html.fromUnstyled
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
