@@ -7,8 +7,7 @@ import Json.Decode as Json
 import Puzzle exposing (Puzzle)
 import Puzzle.Configuration as Configuration
 import Random
-import Task
-
+import Markdown
 
 main : Program () Model Msg
 main =
@@ -27,7 +26,8 @@ init _ =
             """{
             "puzzle": {"columns": 4, "rows": 4},
             "cell": {"size": 50, "image": {"src": "../docs/image/star.jpg", "width": 197, "height": 197}},
-            "shuffle": {"minimum": 20, "maximum": 50}
+            "shuffle": {"minimum": 20, "maximum": 50},
+            "wish": {"message": "SGVsbG8sIFdvcmxkIQo="}
             }"""
     in
     case Json.decodeString Configuration.decode input of
@@ -169,7 +169,7 @@ viewBody model =
             [ viewControl data, viewPuzzle data ]
 
         Solved data ->
-            [ viewControl data, viewPuzzle data ]
+            [ viewControl data, viewPuzzle data, viewWish data ]
 
 
 viewFailure : Json.Error -> Html Msg
@@ -197,6 +197,15 @@ viewPuzzle model =
         |> (Puzzle.view <| model.configuration)
         |> Html.map PuzzleMsg
 
+
+viewWish : Data -> Html Msg
+viewWish model =
+    model
+    |> .configuration
+    |> .wish
+    |> .message
+    |> Markdown.toHtml []
+    |> Html.fromUnstyled
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =

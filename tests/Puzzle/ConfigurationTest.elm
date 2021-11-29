@@ -19,7 +19,8 @@ suite =
                                 """{
                                     "puzzle": {"columns": 4, "rows": 4},
                                     "cell": {"size": 50, "image": {"src": "image/test.png", "width": 10, "height": 20}},
-                                    "shuffle": {"minimum": 20, "maximum": 50}
+                                    "shuffle": {"minimum": 20, "maximum": 50},
+                                    "wish": {"message": "SGVsbG8sIFdvcmxkIQo="}
                                     }"""
 
                             actual =
@@ -30,6 +31,7 @@ suite =
                                     { puzzle = { columns = 4, rows = 4 }
                                     , cell = { size = 50, image = { src = "image/test.png", width = 10, height = 20 } }
                                     , shuffle = { minimum = 20, maximum = 50 }
+                                    , wish = { message = "Hello, World!\n" }
                                     }
                         in
                         Expect.equal actual expected

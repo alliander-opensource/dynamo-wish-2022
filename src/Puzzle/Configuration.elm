@@ -1,5 +1,6 @@
 module Puzzle.Configuration exposing (Cell, Main, Puzzle, Shuffle, decode)
 
+import Base64
 import Json.Decode as Decode exposing (Decoder, field, float, int, string)
 
 
@@ -7,6 +8,7 @@ type alias Main =
     { puzzle : Puzzle
     , cell : Cell
     , shuffle : Shuffle
+    , wish : Wish
     }
 
 
@@ -35,12 +37,17 @@ type alias Shuffle =
     }
 
 
+type alias Wish =
+    { message : String }
+
+
 decode : Decoder Main
 decode =
-    Decode.map3 Main
+    Decode.map4 Main
         (field "puzzle" decodePuzzle)
         (field "cell" decodeCell)
         (field "shuffle" decodeShuffle)
+        (field "wish" decodeWish)
 
 
 decodePuzzle : Decoder Puzzle
@@ -70,3 +77,28 @@ decodeShuffle =
     Decode.map2 Shuffle
         (field "minimum" int)
         (field "maximum" int)
+
+
+decodeWish : Decoder Wish
+decodeWish =
+    Decode.map Wish
+        (field "message" base64EncodedString)
+
+
+base64EncodedString : Decoder String
+base64EncodedString =
+    let
+        decoder input =
+            case
+                input
+                    |> Base64.decode
+                    |> Result.map (List.map Char.fromCode >> String.fromList)
+            of
+                Ok output ->
+                    Decode.succeed output
+
+                Err reason ->
+                    Decode.fail reason
+    in
+    string
+        |> Decode.andThen decoder
