@@ -1,4 +1,4 @@
-module Puzzle.Configuration exposing (Cell, Hint, Main, Puzzle, Shuffle, decode)
+module Puzzle.Configuration exposing (Hint, Main, Puzzle, Shuffle, decode)
 
 import Base64
 import Json.Decode as Decode exposing (Decoder, bool, field, float, int, string)
@@ -6,7 +6,7 @@ import Json.Decode as Decode exposing (Decoder, bool, field, float, int, string)
 
 type alias Main =
     { puzzle : Puzzle
-    , cell : Cell
+    , image : Image
     , shuffle : Shuffle
     , wish : Wish
     , hints : Hint
@@ -16,12 +16,6 @@ type alias Main =
 type alias Puzzle =
     { columns : Int
     , rows : Int
-    }
-
-
-type alias Cell =
-    { size : Float
-    , image : Image
     }
 
 
@@ -50,7 +44,7 @@ decode : Decoder Main
 decode =
     Decode.map5 Main
         (field "puzzle" decodePuzzle)
-        (field "cell" decodeCell)
+        (field "image" decodeImage)
         (field "shuffle" decodeShuffle)
         (field "wish" decodeWish)
         (field "hints" decodeHint)
@@ -61,13 +55,6 @@ decodePuzzle =
     Decode.map2 Puzzle
         (field "columns" int)
         (field "rows" int)
-
-
-decodeCell : Decoder Cell
-decodeCell =
-    Decode.map2 Cell
-        (field "size" float)
-        (field "image" decodeImage)
 
 
 decodeImage : Decoder Image

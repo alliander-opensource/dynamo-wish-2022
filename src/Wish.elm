@@ -9,6 +9,7 @@ import Markdown
 import Puzzle exposing (Puzzle)
 import Puzzle.Configuration as Configuration
 import Random
+import Task
 
 
 main : Program () Model Msg
@@ -26,8 +27,8 @@ init _ =
     let
         input =
             """{
-            "puzzle": {"columns": 4, "rows": 4},
-            "cell": {"size": 50, "image": {"src": "../docs/image/star.jpg", "width": 197, "height": 197}},
+            "puzzle": {"columns": 6, "rows": 6},
+            "image": {"src": "../docs/image/star.jpg", "width": 197, "height": 197},
             "shuffle": {"minimum": 20, "maximum": 50},
             "wish": {"message": "SGVsbG8sIFdvcmxkIQo="},
             "hints": {"indices": false}
@@ -39,8 +40,8 @@ init _ =
                 puzzle =
                     Puzzle.new configuration.puzzle
             in
-            -- ( Initializing configuration, Task.perform Challenge <| Task.succeed puzzle )
-            ( Initializing configuration, Random.generate Challenge <| Puzzle.shuffle configuration.shuffle puzzle )
+            ( Initializing configuration, Task.perform Challenge <| Task.succeed puzzle )
+            -- ( Initializing configuration, Random.generate Challenge <| Puzzle.shuffle configuration.shuffle puzzle )
 
         Err problem ->
             ( Failed problem, Cmd.none )

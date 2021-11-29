@@ -199,8 +199,8 @@ view configuration (Puzzle { columns, rows, state }) =
                         [ displayFlex
                         , flexWrap wrap
                         , boxSizing contentBox
-                        , width <| px <| configuration.cell.size * toFloat columns
-                        , height <| px <| configuration.cell.size * toFloat rows
+                        , width <| px <| toFloat configuration.image.width
+                        , height <| px <| toFloat configuration.image.height
                         ]
                     ]
     in
@@ -231,10 +231,10 @@ viewCell configuration cell =
             configuration.puzzle.rows
 
         h =
-            toFloat configuration.cell.image.height / toFloat rows
+            toFloat configuration.image.height / toFloat rows
 
         w =
-            toFloat configuration.cell.image.width / toFloat columns
+            toFloat configuration.image.width / toFloat columns
 
         background =
             case cell of
@@ -259,7 +259,7 @@ viewCell configuration cell =
                                 |> (*) h
                                 |> negate
                     in
-                    [ backgroundImage (url configuration.cell.image.src)
+                    [ backgroundImage (url configuration.image.src)
                     , backgroundPosition2 (px dx) (px dy)
                     ]
     in
