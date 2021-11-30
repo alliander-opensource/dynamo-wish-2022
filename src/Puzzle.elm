@@ -162,9 +162,32 @@ shuffle configuration ((Puzzle { columns, rows }) as puzzle) =
     List.range (minimum + 2) maximum
         |> List.filter isEven
         |> Random.uniform minimum
-        |> Random.andThen (\l -> Random.list l <| Random.pair cell cell)
+        |> Random.andThen (\l -> Random.list l <| uniqueCellPair cell)
         |> Random.map (List.foldl (uncurry swap) puzzle)
 
+
+uniqueCellPair : Generator Cell -> Generator (Cell, Cell)
+uniqueCellPair aCell =
+    let
+        pickOtherCell: Cell -> Cell -> Generator Cell
+        pickOtherCell original other =
+            if original == other then
+                otherCell original
+            else
+                Random.constant other
+        
+        otherCell : Cell -> Generator Cell
+        otherCell cell =
+            aCell
+            |> Random.andThen (pickOtherCell cell)
+
+        pairWithOtherCell : Cell -> Generator (Cell, Cell)
+        pairWithOtherCell cell =
+            otherCell cell
+                |> Random.map (Tuple.pair cell)
+    in
+    aCell
+        |> Random.andThen pairWithOtherCell
 
 uncurry : (a -> b -> c) -> ( a, b ) -> c
 uncurry f ( a, b ) =

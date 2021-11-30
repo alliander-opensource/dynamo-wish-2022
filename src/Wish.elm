@@ -27,7 +27,7 @@ init _ =
     let
         input =
             """{
-            "puzzle": {"columns": 6, "rows": 6},
+            "puzzle": {"columns": 4, "rows": 4},
             "image": {"src": "../docs/image/star.jpg", "width": 197, "height": 197},
             "shuffle": {"minimum": 20, "maximum": 50},
             "wish": {"message": "SGVsbG8sIFdvcmxkIQo="},
