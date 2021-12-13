@@ -40,8 +40,7 @@ init _ =
                 puzzle =
                     Puzzle.new configuration.puzzle
             in
-            ( Initializing configuration, Task.perform Challenge <| Task.succeed puzzle )
-            -- ( Initializing configuration, Random.generate Challenge <| Puzzle.shuffle configuration.shuffle puzzle )
+            ( Initializing configuration, Random.generate Challenge <| Puzzle.shuffle configuration.shuffle puzzle )
 
         Err problem ->
             ( Failed problem, Cmd.none )
@@ -65,6 +64,7 @@ type Msg
     | Shuffle
     | Challenge Puzzle
     | ToggleIndicesHint Bool
+    | Cheat
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -96,6 +96,19 @@ update message model =
 
         ToggleIndicesHint indices ->
             updateIndicesHint indices model
+
+        Cheat ->
+            let
+                cmd =
+                    model
+                        |> configurationOf
+                        |> Maybe.map .puzzle
+                        |> Maybe.map Puzzle.new
+                        |> Maybe.map Task.succeed
+                        |> Maybe.map (Task.perform Challenge)
+                        |> Maybe.withDefault Cmd.none
+            in
+            ( model, cmd )
 
 
 swap : (a -> b -> c) -> b -> a -> c
@@ -251,6 +264,7 @@ viewHints { indices } =
             , Attribute.id "indices"
             ]
             []
+        , Html.button [ Event.onClick Cheat ] [ Html.text "solve" ]
         ]
     ]
 
