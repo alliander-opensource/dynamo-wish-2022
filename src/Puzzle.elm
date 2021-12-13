@@ -1,4 +1,4 @@
-module Puzzle exposing (Cell(..), Msg, Puzzle, isSolved, new, shuffle, slide, update, view)
+module Puzzle exposing (Cell(..), Msg, Puzzle, isSolved, new, shuffle, slide, slideable, update, view)
 
 import Array exposing (Array)
 import Array.Util as Util exposing (find, zip)
@@ -8,6 +8,7 @@ import Html.Styled.Attributes as Attribute
 import Html.Styled.Events as Event
 import Puzzle.Configuration as Configuration
 import Random exposing (Generator)
+import Random.Util exposing (uniquePair)
 
 
 type Puzzle
@@ -65,6 +66,13 @@ slide cell puzzle =
 
     else
         puzzle
+
+
+slideable : Puzzle -> List Cell
+slideable ((Puzzle { state }) as puzzle) =
+    state
+        |> Array.filter (\cell -> isAdjacentToBlank cell puzzle)
+        |> Array.toList
 
 
 isAdjacentToBlank : Cell -> Puzzle -> Bool
@@ -146,7 +154,7 @@ shuffle configuration ((Puzzle { columns, rows }) as puzzle) =
             columns * rows
 
         cell =
-            Random.uniform Blank <| (List.range 0 (n - 1) |> List.map Cell)
+            Random.uniform Blank <| (List.range 0 (n - 2) |> List.map Cell)
 
         minimum =
             if isEven configuration.minimum then
@@ -162,32 +170,9 @@ shuffle configuration ((Puzzle { columns, rows }) as puzzle) =
     List.range (minimum + 2) maximum
         |> List.filter isEven
         |> Random.uniform minimum
-        |> Random.andThen (\l -> Random.list l <| uniqueCellPair cell)
+        |> Random.andThen (\l -> Random.list l <| uniquePair cell)
         |> Random.map (List.foldl (uncurry swap) puzzle)
 
-
-uniqueCellPair : Generator Cell -> Generator (Cell, Cell)
-uniqueCellPair aCell =
-    let
-        pickOtherCell: Cell -> Cell -> Generator Cell
-        pickOtherCell original other =
-            if original == other then
-                otherCell original
-            else
-                Random.constant other
-        
-        otherCell : Cell -> Generator Cell
-        otherCell cell =
-            aCell
-            |> Random.andThen (pickOtherCell cell)
-
-        pairWithOtherCell : Cell -> Generator (Cell, Cell)
-        pairWithOtherCell cell =
-            otherCell cell
-                |> Random.map (Tuple.pair cell)
-    in
-    aCell
-        |> Random.andThen pairWithOtherCell
 
 uncurry : (a -> b -> c) -> ( a, b ) -> c
 uncurry f ( a, b ) =

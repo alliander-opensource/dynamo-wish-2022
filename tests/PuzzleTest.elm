@@ -3,6 +3,7 @@ module PuzzleTest exposing (..)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Puzzle exposing (Cell(..), slide)
+import Random
 import Test exposing (..)
 
 
