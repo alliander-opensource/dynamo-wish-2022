@@ -12,7 +12,7 @@ import Random
 import Task
 
 
-main : Program () Model Msg
+main : Program Json.Value Model Msg
 main =
     Browser.document
         { init = init
@@ -22,19 +22,9 @@ main =
         }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    let
-        input =
-            """{
-            "puzzle": {"columns": 4, "rows": 4},
-            "image": {"src": "../docs/image/star.jpg", "width": 197, "height": 197},
-            "shuffle": {"minimum": 20, "maximum": 50},
-            "wish": {"message": "SGVsbG8sIFdvcmxkIQo="},
-            "hints": {"indices": false}
-            }"""
-    in
-    case Json.decodeString Configuration.decode input of
+init : Json.Value -> ( Model, Cmd Msg )
+init flags =
+    case Json.decodeValue Configuration.decode flags of
         Ok configuration ->
             let
                 puzzle =
