@@ -11874,11 +11874,11 @@ var $author$project$Puzzle$shuffle = F2(
 		var maximum = A2($elm$core$Basics$max, minimum + 2, configuration.maximum);
 		var cell = A2(
 			$elm$random$Random$uniform,
-			$author$project$Puzzle$Blank,
+			$author$project$Puzzle$Cell(0),
 			A2(
 				$elm$core$List$map,
 				$author$project$Puzzle$Cell,
-				A2($elm$core$List$range, 0, n - 2)));
+				A2($elm$core$List$range, 1, n - 2)));
 		return A2(
 			$elm$random$Random$map,
 			A2(

@@ -154,7 +154,7 @@ shuffle configuration ((Puzzle { columns, rows }) as puzzle) =
             columns * rows
 
         cell =
-            Random.uniform Blank <| (List.range 0 (n - 2) |> List.map Cell)
+            Random.uniform (Cell 0) <| (List.range 1 (n - 2) |> List.map Cell)
 
         minimum =
             if isEven configuration.minimum then
@@ -166,7 +166,6 @@ shuffle configuration ((Puzzle { columns, rows }) as puzzle) =
         maximum =
             max (minimum + 2) configuration.maximum
     in
-    -- TODO In the unlikely event that the cell generator produces the same cell twice, the parity of the permutation is off.
     List.range (minimum + 2) maximum
         |> List.filter isEven
         |> Random.uniform minimum
