@@ -10694,14 +10694,16 @@ var $author$project$Puzzle$Configuration$Main = F5(
 	function (puzzle, image, shuffle, wish, hints) {
 		return {hints: hints, image: image, puzzle: puzzle, shuffle: shuffle, wish: wish};
 	});
-var $author$project$Puzzle$Configuration$Hint = function (indices) {
-	return {indices: indices};
-};
+var $author$project$Puzzle$Configuration$Hint = F2(
+	function (indices, solveAfter) {
+		return {indices: indices, solveAfter: solveAfter};
+	});
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
-var $author$project$Puzzle$Configuration$decodeHint = A2(
-	$elm$json$Json$Decode$map,
+var $author$project$Puzzle$Configuration$decodeHint = A3(
+	$elm$json$Json$Decode$map2,
 	$author$project$Puzzle$Configuration$Hint,
-	A2($elm$json$Json$Decode$field, 'indices', $elm$json$Json$Decode$bool));
+	A2($elm$json$Json$Decode$field, 'indices', $elm$json$Json$Decode$bool),
+	A2($elm$json$Json$Decode$field, 'solveAfter', $elm$json$Json$Decode$int));
 var $author$project$Puzzle$Configuration$Image = F3(
 	function (src, width, height) {
 		return {height: height, src: src, width: width};
@@ -11510,6 +11512,7 @@ var $author$project$Puzzle$new = function (_v0) {
 		{
 			columns: columns,
 			rows: rows,
+			slides: 0,
 			state: $author$project$Puzzle$emptyState(columns * rows)
 		});
 };
@@ -11967,6 +11970,14 @@ var $author$project$Wish$swap = F3(
 	function (f, b, a) {
 		return A2(f, a, b);
 	});
+var $author$project$Puzzle$incrementSlides = function (_v0) {
+	var puzzle = _v0.a;
+	var slides = puzzle.slides;
+	return $author$project$Puzzle$Puzzle(
+		_Utils_update(
+			puzzle,
+			{slides: slides + 1}));
+};
 var $author$project$Puzzle$horizontalAdjacent = F3(
 	function (columns, i, j) {
 		var columnOfI = A2($elm$core$Basics$modBy, columns, i);
@@ -11997,7 +12008,8 @@ var $author$project$Puzzle$isAdjacentToBlank = $author$project$Puzzle$areAdjacen
 var $author$project$Puzzle$swapWithBlank = $author$project$Puzzle$swap($author$project$Puzzle$Blank);
 var $author$project$Puzzle$slide = F2(
 	function (cell, puzzle) {
-		return A2($author$project$Puzzle$isAdjacentToBlank, cell, puzzle) ? A2($author$project$Puzzle$swapWithBlank, cell, puzzle) : puzzle;
+		return A2($author$project$Puzzle$isAdjacentToBlank, cell, puzzle) ? $author$project$Puzzle$incrementSlides(
+			A2($author$project$Puzzle$swapWithBlank, cell, puzzle)) : puzzle;
 	});
 var $author$project$Puzzle$update = F2(
 	function (message, puzzle) {
@@ -14305,6 +14317,10 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$for = $rtfeldman$elm_css$Html$Styl
 var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
 var $rtfeldman$elm_css$Html$Styled$input = $rtfeldman$elm_css$Html$Styled$node('input');
 var $rtfeldman$elm_css$Html$Styled$label = $rtfeldman$elm_css$Html$Styled$node('label');
+var $author$project$Puzzle$numberOfSlides = function (_v0) {
+	var slides = _v0.a.slides;
+	return slides;
+};
 var $rtfeldman$elm_css$Html$Styled$Events$targetChecked = A2(
 	$elm$json$Json$Decode$at,
 	_List_fromArray(
@@ -14318,48 +14334,60 @@ var $rtfeldman$elm_css$Html$Styled$Events$onCheck = function (tagger) {
 };
 var $rtfeldman$elm_css$Html$Styled$span = $rtfeldman$elm_css$Html$Styled$node('span');
 var $rtfeldman$elm_css$Html$Styled$Attributes$type_ = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('type');
-var $author$project$Wish$viewHints = function (_v0) {
-	var indices = _v0.indices;
-	return _List_fromArray(
-		[
-			A2(
-			$rtfeldman$elm_css$Html$Styled$span,
-			_List_Nil,
+var $author$project$Wish$viewHints = F2(
+	function (_v0, puzzle) {
+		var indices = _v0.indices;
+		var solveAfter = _v0.solveAfter;
+		var solveHint = (_Utils_cmp(
+			$author$project$Puzzle$numberOfSlides(puzzle),
+			solveAfter) > -1) ? _List_fromArray(
+			[
+				A2(
+				$rtfeldman$elm_css$Html$Styled$button,
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Html$Styled$Events$onClick($author$project$Wish$Cheat)
+					]),
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Html$Styled$text('solve')
+					]))
+			]) : _List_Nil;
+		return $elm$core$List$concat(
 			_List_fromArray(
 				[
-					A2(
-					$rtfeldman$elm_css$Html$Styled$label,
 					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$Attributes$for('indices')
-						]),
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$text('show indices')
-						])),
-					A2(
-					$rtfeldman$elm_css$Html$Styled$input,
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$Events$onCheck($author$project$Wish$ToggleIndicesHint),
-							$rtfeldman$elm_css$Html$Styled$Attributes$type_('checkbox'),
-							$rtfeldman$elm_css$Html$Styled$Attributes$checked(indices),
-							$rtfeldman$elm_css$Html$Styled$Attributes$id('indices')
-						]),
-					_List_Nil),
-					A2(
-					$rtfeldman$elm_css$Html$Styled$button,
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$Events$onClick($author$project$Wish$Cheat)
-						]),
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$text('solve')
-						]))
-				]))
-		]);
-};
+					[
+						A2(
+						$rtfeldman$elm_css$Html$Styled$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$rtfeldman$elm_css$Html$Styled$label,
+								_List_fromArray(
+									[
+										$rtfeldman$elm_css$Html$Styled$Attributes$for('indices')
+									]),
+								_List_fromArray(
+									[
+										$rtfeldman$elm_css$Html$Styled$text('show indices')
+									])),
+								A2(
+								$rtfeldman$elm_css$Html$Styled$input,
+								_List_fromArray(
+									[
+										$rtfeldman$elm_css$Html$Styled$Events$onCheck($author$project$Wish$ToggleIndicesHint),
+										$rtfeldman$elm_css$Html$Styled$Attributes$type_('checkbox'),
+										$rtfeldman$elm_css$Html$Styled$Attributes$checked(indices),
+										$rtfeldman$elm_css$Html$Styled$Attributes$id('indices')
+									]),
+								_List_Nil)
+							]))
+					]),
+					solveHint
+				]));
+	});
 var $author$project$Wish$viewControl = function (data) {
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
@@ -14376,7 +14404,7 @@ var $author$project$Wish$viewControl = function (data) {
 					[
 						$rtfeldman$elm_css$Html$Styled$text('shuffle')
 					])),
-			$author$project$Wish$viewHints(data.configuration.hints)));
+			A2($author$project$Wish$viewHints, data.configuration.hints, data.puzzle)));
 };
 var $rtfeldman$elm_css$Html$Styled$p = $rtfeldman$elm_css$Html$Styled$node('p');
 var $rtfeldman$elm_css$Html$Styled$pre = $rtfeldman$elm_css$Html$Styled$node('pre');
@@ -14930,4 +14958,4 @@ var $author$project$Wish$view = function (model) {
 };
 var $author$project$Wish$main = $elm$browser$Browser$document(
 	{init: $author$project$Wish$init, subscriptions: $author$project$Wish$subscriptions, update: $author$project$Wish$update, view: $author$project$Wish$view});
-_Platform_export({'Wish':{'init':$author$project$Wish$main($elm$json$Json$Decode$value)({"versions":{"elm":"0.19.1"},"types":{"message":"Wish.Msg","aliases":{"Array.Tree":{"args":["a"],"type":"Elm.JsArray.JsArray (Array.Node a)"}},"unions":{"Wish.Msg":{"args":[],"tags":{"PuzzleMsg":["Puzzle.Msg"],"Shuffle":[],"Challenge":["Puzzle.Puzzle"],"ToggleIndicesHint":["Basics.Bool"],"Cheat":[]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Puzzle.Msg":{"args":[],"tags":{"Slide":["Puzzle.Cell"]}},"Puzzle.Puzzle":{"args":[],"tags":{"Puzzle":["{ columns : Basics.Int, rows : Basics.Int, state : Array.Array Puzzle.Cell }"]}},"Array.Array":{"args":["a"],"tags":{"Array_elm_builtin":["Basics.Int","Basics.Int","Array.Tree a","Elm.JsArray.JsArray a"]}},"Puzzle.Cell":{"args":[],"tags":{"Blank":[],"Cell":["Basics.Int"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Elm.JsArray.JsArray":{"args":["a"],"tags":{"JsArray":["a"]}},"Array.Node":{"args":["a"],"tags":{"SubTree":["Array.Tree a"],"Leaf":["Elm.JsArray.JsArray a"]}}}}})}});}(this));
+_Platform_export({'Wish':{'init':$author$project$Wish$main($elm$json$Json$Decode$value)({"versions":{"elm":"0.19.1"},"types":{"message":"Wish.Msg","aliases":{"Array.Tree":{"args":["a"],"type":"Elm.JsArray.JsArray (Array.Node a)"}},"unions":{"Wish.Msg":{"args":[],"tags":{"PuzzleMsg":["Puzzle.Msg"],"Shuffle":[],"Challenge":["Puzzle.Puzzle"],"ToggleIndicesHint":["Basics.Bool"],"Cheat":[]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Puzzle.Msg":{"args":[],"tags":{"Slide":["Puzzle.Cell"]}},"Puzzle.Puzzle":{"args":[],"tags":{"Puzzle":["{ columns : Basics.Int, rows : Basics.Int, state : Array.Array Puzzle.Cell, slides : Basics.Int }"]}},"Array.Array":{"args":["a"],"tags":{"Array_elm_builtin":["Basics.Int","Basics.Int","Array.Tree a","Elm.JsArray.JsArray a"]}},"Puzzle.Cell":{"args":[],"tags":{"Blank":[],"Cell":["Basics.Int"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Elm.JsArray.JsArray":{"args":["a"],"tags":{"JsArray":["a"]}},"Array.Node":{"args":["a"],"tags":{"SubTree":["Array.Tree a"],"Leaf":["Elm.JsArray.JsArray a"]}}}}})}});}(this));

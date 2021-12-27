@@ -1,7 +1,7 @@
 module Puzzle.Configuration exposing (Hint, Main, Puzzle, Shuffle, decode)
 
 import Base64
-import Json.Decode as Decode exposing (Decoder, bool, field, float, int, string)
+import Json.Decode as Decode exposing (Decoder, bool, field, int, string)
 
 
 type alias Main =
@@ -37,7 +37,9 @@ type alias Wish =
 
 
 type alias Hint =
-    { indices : Bool }
+    { indices : Bool
+    , solveAfter : Int
+    }
 
 
 decode : Decoder Main
@@ -99,5 +101,6 @@ base64EncodedString =
 
 decodeHint : Decoder Hint
 decodeHint =
-    Decode.map Hint
+    Decode.map2 Hint
         (field "indices" bool)
+        (field "solveAfter" int)

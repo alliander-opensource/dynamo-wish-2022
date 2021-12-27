@@ -247,23 +247,33 @@ viewControl : Data -> Html Msg
 viewControl data =
     Html.div [] <|
         Html.button [ Event.onClick Shuffle ] [ Html.text "shuffle" ]
-            :: viewHints data.configuration.hints
+            :: viewHints data.configuration.hints data.puzzle
 
 
-viewHints : Configuration.Hint -> List (Html Msg)
-viewHints { indices } =
-    [ Html.span []
-        [ Html.label [ Attribute.for "indices" ] [ Html.text "show indices" ]
-        , Html.input
-            [ Event.onCheck ToggleIndicesHint
-            , Attribute.type_ "checkbox"
-            , Attribute.checked indices
-            , Attribute.id "indices"
-            ]
-            []
-        , Html.button [ Event.onClick Cheat ] [ Html.text "solve" ]
+viewHints : Configuration.Hint -> Puzzle -> List (Html Msg)
+viewHints { indices, solveAfter } puzzle =
+    let
+        solveHint =
+            if Puzzle.numberOfSlides puzzle >= solveAfter then
+                [ Html.button [ Event.onClick Cheat ] [ Html.text "solve" ] ]
+
+            else
+                []
+    in
+    List.concat
+        [ [ Html.span []
+                [ Html.label [ Attribute.for "indices" ] [ Html.text "show indices" ]
+                , Html.input
+                    [ Event.onCheck ToggleIndicesHint
+                    , Attribute.type_ "checkbox"
+                    , Attribute.checked indices
+                    , Attribute.id "indices"
+                    ]
+                    []
+                ]
+          ]
+        , solveHint
         ]
-    ]
 
 
 viewPuzzle : Data -> Html Msg

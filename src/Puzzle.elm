@@ -1,4 +1,4 @@
-module Puzzle exposing (Cell(..), Msg, Puzzle, isSolved, new, shuffle, slide, slideable, update, view)
+module Puzzle exposing (Cell(..), Msg, Puzzle, isSolved, new, numberOfSlides, shuffle, slide, slideable, update, view)
 
 import Array exposing (Array)
 import Array.Util as Util exposing (find, zip)
@@ -16,6 +16,7 @@ type Puzzle
         { columns : Int
         , rows : Int
         , state : Array Cell
+        , slides : Int
         }
 
 
@@ -30,6 +31,7 @@ new { columns, rows } =
         { columns = columns
         , rows = rows
         , state = emptyState <| columns * rows
+        , slides = 0
         }
 
 
@@ -59,13 +61,25 @@ isSolved (Puzzle { columns, rows, state }) =
         |> Util.all equal
 
 
+numberOfSlides : Puzzle -> Int
+numberOfSlides (Puzzle { slides }) =
+    slides
+
+
 slide : Cell -> Puzzle -> Puzzle
 slide cell puzzle =
     if isAdjacentToBlank cell puzzle then
-        swapWithBlank cell puzzle
+        puzzle
+            |> swapWithBlank cell
+            |> incrementSlides
 
     else
         puzzle
+
+
+incrementSlides : Puzzle -> Puzzle
+incrementSlides (Puzzle ({ slides } as puzzle)) =
+    Puzzle { puzzle | slides = slides + 1 }
 
 
 slideable : Puzzle -> List Cell

@@ -21,7 +21,7 @@ suite =
                                     "image": {"src": "image/test.png", "width": 10, "height": 20},
                                     "shuffle": {"minimum": 20, "maximum": 50},
                                     "wish": {"message": "SGVsbG8sIFdvcmxkIQo="},
-                                    "hints": {"indices": true}
+                                    "hints": {"indices": true, "solveAfter": 2}
                                     }"""
 
                             actual =
@@ -33,7 +33,7 @@ suite =
                                     , image = { src = "image/test.png", width = 10, height = 20 }
                                     , shuffle = { minimum = 20, maximum = 50 }
                                     , wish = { message = "Hello, World!\n" }
-                                    , hints = { indices = True }
+                                    , hints = { indices = True, solveAfter = 2 }
                                     }
                         in
                         Expect.equal actual expected
