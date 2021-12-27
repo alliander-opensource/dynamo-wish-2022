@@ -203,6 +203,7 @@ view model =
     { title = "Best wishes for 2022"
     , body =
         viewBody model
+            |> wrap
             |> List.map Html.toUnstyled
     }
 
@@ -221,6 +222,12 @@ viewBody model =
 
         Solved data ->
             [ viewControl data, viewPuzzle data, viewWish data ]
+
+
+wrap : List (Html Msg) -> List (Html Msg)
+wrap content =
+    [ Html.div [ Attribute.class "wish" ] content
+    ]
 
 
 viewFailure : Json.Error -> Html Msg

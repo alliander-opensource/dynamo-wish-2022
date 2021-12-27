@@ -14905,12 +14905,26 @@ var $author$project$Wish$viewBody = function (model) {
 				]);
 	}
 };
+var $rtfeldman$elm_css$Html$Styled$Attributes$class = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('className');
+var $author$project$Wish$wrap = function (content) {
+	return _List_fromArray(
+		[
+			A2(
+			$rtfeldman$elm_css$Html$Styled$div,
+			_List_fromArray(
+				[
+					$rtfeldman$elm_css$Html$Styled$Attributes$class('wish')
+				]),
+			content)
+		]);
+};
 var $author$project$Wish$view = function (model) {
 	return {
 		body: A2(
 			$elm$core$List$map,
 			$rtfeldman$elm_css$Html$Styled$toUnstyled,
-			$author$project$Wish$viewBody(model)),
+			$author$project$Wish$wrap(
+				$author$project$Wish$viewBody(model))),
 		title: 'Best wishes for 2022'
 	};
 };
