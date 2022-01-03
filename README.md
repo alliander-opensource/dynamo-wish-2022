@@ -4,7 +4,7 @@ This project contains the source of the puzzle game that Dynamo uses to wish the
 ## Announcement
 We are announcing the wish on the intranet. For that we will use the following announcement.
 
-> Software development is op de eerste plaats mensen werk. Het zijn de wensen van mensen die gerealiseerd worden. Het is een team van mensen die deze wensen vertaalt in een werkende software. Datzelfde team onderhoudt die software en zorgt ervoor dat deze beschikbaar is en blijft.
+> Software development is op de eerste plaats mensen werk. Het zijn de wensen van mensen die gerealiseerd worden. Het is een team van mensen die deze wensen vertaalt in een werkende applicatie. Datzelfde team onderhoudt de applicatie en zorgt ervoor dat deze beschikbaar is en blijft.
 >
 > Software development is vaak ook een puzzel. Er zijn tal van keuzes die gemaakt moeten worden tijdens software development. Het overzien van de gevolgen van deze keuzes en het omgaan met eerder gemaakte keuzes is een opgave.
 >
@@ -12,10 +12,13 @@ We are announcing the wish on the intranet. For that we will use the following a
 >
 > Afgelopen jaar was het namelijk moeilijk om de mens achter de ontwikkelaar te blijven herkennen, en te vinden in de bekende tegeltjes van de teams-vergaderingen.
 >
-> Vandaar dat wij dit jaar willen beginnen door iedereen een boodschap te sturen. Dit in stijl met het hart van software development in gedachten.
+> Vandaar dat wij dit jaar willen beginnen door iedereen een boodschap te sturen. Dit in stijl, met het hart van software development in gedachten.
 >
 > Hier is een [puzzel][wish]. Het doel van de puzzel is om de foto van het Dynamo team compleet te maken. Dit doe je door de tegels te schuiven in de open ruimte.
-> Wanneer de foto compleet is verschijnt onze boodschap voor het nieuwe jaar. 
+> Wanneer de foto compleet is verschijnt onze boodschap voor het nieuwe jaar.
+>
+> Mocht het niet helemaal lukken; geeft niet op! Na een aantal keer schuiven verschijnt er een knop die je helpt met het oplossen van deze puzzel. Net zo als het Dynamo team binnen Alliander helpt om wensen te realiseren.
+> Hier vind jij ook de mogelijkheid om de tegeltjes van hints te voorzien in welke volgorde ze moeten. De tegels worden dan genummerd. Het is de bedoeling dat de nummers van links naar rechts en van onder naar boven in de goede volgorde komen te staan.
 
 
 ## Development
