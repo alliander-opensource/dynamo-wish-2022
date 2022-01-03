@@ -7,7 +7,7 @@
             "puzzle": { "columns": 4, "rows": 4 },
             "image": { "src": "image/dynamo-small.png", "width": 1115, "height": 552 },
             "shuffle": { "minimum": 20, "maximum": 50 },
-            "wish": { "message": "IyBEZSBiZXN0ZSB3ZW5zZW4gdm9vciAyMDIyCldpaiBraWprZW4gZXIgZGl0IGphYXIgd2VlciBuYWFyIHVpdCBvbSBzYW1lbiB0ZSB3ZXJrZW4gYWFuIG1vb2llIG9wbG9zc2luZ2VuIG9tIGRlIGVuZXJnaWUgdHJhbnNpdGllIHRlIHJlYWxpc2VyZW4uCgpEaXQgZG9lbiB3aWogZ3JhYWcgem9uZGVyIGVsa2FhciB1aXQgaGV0IG9vZyB0ZSB2ZXJsaWV6ZW4uIEhldCB6aWpuIGltbWVycyBkZSB2ZXJiaW5kaW5nZW4gZGllIGlldHMgd2FhcmRldm9sIG1ha2VuLgoKSGV0IER5bmFtbyB0ZWFtIHdlbnN0IGllZGVyZWVuIGRhYXJvbSBoZXQgYmVzdGUgdm9vciBoZXQgbmlldXdlIGphYXIuIFdpaiBob3BlbiBkYXQgaGV0IGVlbiBlbmVydmVyZW5kIGphYXIgd29yZHQgd2FhciBlciBtZWVyIHJ1aW10ZSBvbnN0YWF0IG9tIGRpZSB2ZXJiaW5kaW5nIHRlIHpvZWtlbiBlbiB0ZSB2b3JtZW4uCgpab2FscyBhbHRpamQKCk1hZGUgd2l0aCA8c3BhbiBjbGFzcz0iaGVhcnQiPiYjMTAwODQ7PC9zcGFuPiBieSBEeW5hbW8=" },
+            "wish": { "message": "IyBEZSBiZXN0ZSB3ZW5zZW4gdm9vciAyMDIyCldpaiBraWprZW4gZXIgZGl0IGphYXIgd2VlciBuYWFyIHVpdCBvbSBzYW1lbiB0ZSB3ZXJrZW4gYWFuIG1vb2llIG9wbG9zc2luZ2VuIG9tIGRlIGVuZXJnaWV0cmFuc2l0aWUgdGUgcmVhbGlzZXJlbi4KCkRpdCBkb2VuIHdpaiBncmFhZyB6b25kZXIgZWxrYWFyIHVpdCBoZXQgb29nIHRlIHZlcmxpZXplbi4gSGV0IHppam4gaW1tZXJzIGRlIHZlcmJpbmRpbmdlbiBkaWUgaWV0cyB3YWFyZGV2b2wgbWFrZW4uCgpIZXQgRHluYW1vIHRlYW0gd2Vuc3QgaWVkZXJlZW4gZGFhcm9tIGhldCBiZXN0ZSB2b29yIGhldCBuaWV1d2UgamFhci4gV2lqIGhvcGVuIGRhdCBoZXQgZWVuIGVuZXJ2ZXJlbmQgamFhciB3b3JkdCB3YWFyIGVyIG1lZXIgcnVpbXRlIG9uc3RhYXQgb20gZGllIHZlcmJpbmRpbmcgdGUgem9la2VuIGVuIHRlIHZvcm1lbi4KClpvYWxzIGFsdGlqZAoKTWFkZSB3aXRoIDxzcGFuIGNsYXNzPSJoZWFydCI+JiMxMDA4NDs8L3NwYW4+IGJ5IER5bmFtbw==" },
             "hints": { "indices": false, "solveAfter": 10 }
         }
     });
