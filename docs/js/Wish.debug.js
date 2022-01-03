@@ -14924,8 +14924,6 @@ var $author$project$Wish$viewPuzzle = function (model) {
 		_List_fromArray(
 			[content]));
 };
-var $rtfeldman$elm_css$VirtualDom$Styled$unstyledNode = $rtfeldman$elm_css$VirtualDom$Styled$Unstyled;
-var $rtfeldman$elm_css$Html$Styled$fromUnstyled = $rtfeldman$elm_css$VirtualDom$Styled$unstyledNode;
 var $elm_explorations$markdown$Markdown$defaultOptions = {
 	defaultHighlighting: $elm$core$Maybe$Nothing,
 	githubFlavored: $elm$core$Maybe$Just(
@@ -14933,6 +14931,8 @@ var $elm_explorations$markdown$Markdown$defaultOptions = {
 	sanitize: true,
 	smartypants: false
 };
+var $rtfeldman$elm_css$VirtualDom$Styled$unstyledNode = $rtfeldman$elm_css$VirtualDom$Styled$Unstyled;
+var $rtfeldman$elm_css$Html$Styled$fromUnstyled = $rtfeldman$elm_css$VirtualDom$Styled$unstyledNode;
 var $elm$core$Maybe$isJust = function (maybe) {
 	if (maybe.$ === 'Just') {
 		return true;
@@ -14941,11 +14941,13 @@ var $elm$core$Maybe$isJust = function (maybe) {
 	}
 };
 var $elm_explorations$markdown$Markdown$toHtmlWith = _Markdown_toHtml;
-var $elm_explorations$markdown$Markdown$toHtml = $elm_explorations$markdown$Markdown$toHtmlWith($elm_explorations$markdown$Markdown$defaultOptions);
 var $author$project$Wish$viewWish = function (model) {
 	return $rtfeldman$elm_css$Html$Styled$fromUnstyled(
-		A2(
-			$elm_explorations$markdown$Markdown$toHtml,
+		A3(
+			$elm_explorations$markdown$Markdown$toHtmlWith,
+			_Utils_update(
+				$elm_explorations$markdown$Markdown$defaultOptions,
+				{sanitize: false}),
 			_List_fromArray(
 				[
 					$elm$html$Html$Attributes$class('message')

@@ -7,7 +7,7 @@ import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attribute
 import Html.Styled.Events as Event
 import Json.Decode as Json
-import Markdown
+import Markdown exposing (defaultOptions)
 import Puzzle exposing (Puzzle)
 import Puzzle.Configuration as Configuration
 import Random
@@ -247,10 +247,13 @@ viewInitializing _ =
 
 viewControl : Data -> Html Msg
 viewControl data =
-    Html.div [ Attribute.css [
-        displayFlex
-        , justifyContent center
-    ]] <|
+    Html.div
+        [ Attribute.css
+            [ displayFlex
+            , justifyContent center
+            ]
+        ]
+    <|
         Html.button [ Event.onClick Shuffle ] [ Html.text "shuffle" ]
             :: viewHints data.configuration.hints data.puzzle
 
@@ -300,10 +303,13 @@ viewPuzzle model =
                 |> (Puzzle.view <| model.configuration)
                 |> Html.map PuzzleMsg
     in
-    Html.div [ Attribute.css [
-        displayFlex
-        , justifyContent center
-    ]] [ content]
+    Html.div
+        [ Attribute.css
+            [ displayFlex
+            , justifyContent center
+            ]
+        ]
+        [ content ]
 
 
 viewWish : Data -> Html Msg
@@ -312,7 +318,7 @@ viewWish model =
         |> .configuration
         |> .wish
         |> .message
-        |> Markdown.toHtml [ BasicAttribute.class "message"]
+        |> Markdown.toHtmlWith { defaultOptions | sanitize = False } [ BasicAttribute.class "message" ]
         |> Html.fromUnstyled
 
 
