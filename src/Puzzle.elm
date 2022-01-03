@@ -296,7 +296,7 @@ viewCell configuration cell =
                   , borderStyle solid
                   , borderWidth (px 1)
                   , borderColor (gray 155)
-                  , color (gray 255)
+                  , color (gray 0)
                   , fontSize (px 10)
                   ]
                 , background

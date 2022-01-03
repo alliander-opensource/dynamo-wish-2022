@@ -14858,7 +14858,7 @@ var $author$project$Puzzle$viewCell = F2(
 									$rtfeldman$elm_css$Css$borderColor(
 									$author$project$Puzzle$gray(155)),
 									$rtfeldman$elm_css$Css$color(
-									$author$project$Puzzle$gray(255)),
+									$author$project$Puzzle$gray(0)),
 									$rtfeldman$elm_css$Css$fontSize(
 									$rtfeldman$elm_css$Css$px(10))
 								]),
