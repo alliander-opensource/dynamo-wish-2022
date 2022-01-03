@@ -1,6 +1,8 @@
 module Wish exposing (..)
 
 import Browser exposing (Document)
+import Css exposing (..)
+import Html.Attributes as BasicAttribute
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attribute
 import Html.Styled.Events as Event
@@ -245,7 +247,10 @@ viewInitializing _ =
 
 viewControl : Data -> Html Msg
 viewControl data =
-    Html.div [] <|
+    Html.div [ Attribute.css [
+        displayFlex
+        , justifyContent center
+    ]] <|
         Html.button [ Event.onClick Shuffle ] [ Html.text "shuffle" ]
             :: viewHints data.configuration.hints data.puzzle
 
@@ -260,28 +265,45 @@ viewHints { indices, solveAfter } puzzle =
             else
                 []
     in
-    List.concat
-        [ [ Html.span []
-                [ Html.label [ Attribute.for "indices" ] [ Html.text "show indices" ]
-                , Html.input
-                    [ Event.onCheck ToggleIndicesHint
-                    , Attribute.type_ "checkbox"
-                    , Attribute.checked indices
-                    , Attribute.id "indices"
-                    ]
-                    []
-                ]
-          ]
-        , solveHint
+    [ Html.div
+        [ Attribute.class "hints"
+        , Attribute.css
+            [ position absolute
+            , top (px 0)
+            , right (px 0)
+            ]
         ]
+      <|
+        List.concat
+            [ [ Html.span []
+                    [ Html.label [ Attribute.for "indices" ] [ Html.text "show indices" ]
+                    , Html.input
+                        [ Event.onCheck ToggleIndicesHint
+                        , Attribute.type_ "checkbox"
+                        , Attribute.checked indices
+                        , Attribute.id "indices"
+                        ]
+                        []
+                    ]
+              ]
+            , solveHint
+            ]
+    ]
 
 
 viewPuzzle : Data -> Html Msg
 viewPuzzle model =
-    model
-        |> .puzzle
-        |> (Puzzle.view <| model.configuration)
-        |> Html.map PuzzleMsg
+    let
+        content =
+            model
+                |> .puzzle
+                |> (Puzzle.view <| model.configuration)
+                |> Html.map PuzzleMsg
+    in
+    Html.div [ Attribute.css [
+        displayFlex
+        , justifyContent center
+    ]] [ content]
 
 
 viewWish : Data -> Html Msg
@@ -290,7 +312,7 @@ viewWish model =
         |> .configuration
         |> .wish
         |> .message
-        |> Markdown.toHtml []
+        |> Markdown.toHtml [ BasicAttribute.class "message"]
         |> Html.fromUnstyled
 
 

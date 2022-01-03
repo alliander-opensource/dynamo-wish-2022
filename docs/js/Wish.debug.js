@@ -14244,11 +14244,155 @@ var $rtfeldman$elm_css$VirtualDom$Styled$Node = F3(
 var $rtfeldman$elm_css$VirtualDom$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$Node;
 var $rtfeldman$elm_css$Html$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$node;
 var $rtfeldman$elm_css$Html$Styled$button = $rtfeldman$elm_css$Html$Styled$node('button');
-var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
+var $rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
+	return {$: 'AppendProperty', a: a};
+};
+var $rtfeldman$elm_css$Css$property = F2(
+	function (key, value) {
+		return $rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
+	});
+var $rtfeldman$elm_css$Css$prop1 = F2(
+	function (key, arg) {
+		return A2($rtfeldman$elm_css$Css$property, key, arg.value);
+	});
+var $rtfeldman$elm_css$Css$center = $rtfeldman$elm_css$Css$prop1('center');
 var $rtfeldman$elm_css$VirtualDom$Styled$Attribute = F3(
 	function (a, b, c) {
 		return {$: 'Attribute', a: a, b: b, c: c};
 	});
+var $rtfeldman$elm_css$VirtualDom$Styled$murmurSeed = 15739;
+var $rtfeldman$elm_css$VirtualDom$Styled$getClassname = function (styles) {
+	return $elm$core$List$isEmpty(styles) ? 'unstyled' : A2(
+		$elm$core$String$cons,
+		_Utils_chr('_'),
+		$rtfeldman$elm_hex$Hex$toString(
+			A2(
+				$rtfeldman$elm_css$ElmCssVendor$Murmur3$hashString,
+				$rtfeldman$elm_css$VirtualDom$Styled$murmurSeed,
+				$rtfeldman$elm_css$Css$Preprocess$Resolve$compile(
+					$elm$core$List$singleton(
+						$rtfeldman$elm_css$Css$Preprocess$stylesheet(
+							$elm$core$List$singleton(
+								A2(
+									$rtfeldman$elm_css$VirtualDom$Styled$makeSnippet,
+									styles,
+									$rtfeldman$elm_css$Css$Structure$UniversalSelectorSequence(_List_Nil)))))))));
+};
+var $elm$virtual_dom$VirtualDom$property = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_property,
+			_VirtualDom_noInnerHtmlOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var $rtfeldman$elm_css$Html$Styled$Internal$css = function (styles) {
+	var classname = $rtfeldman$elm_css$VirtualDom$Styled$getClassname(styles);
+	var classProperty = A2(
+		$elm$virtual_dom$VirtualDom$property,
+		'className',
+		$elm$json$Json$Encode$string(classname));
+	return A3($rtfeldman$elm_css$VirtualDom$Styled$Attribute, classProperty, styles, classname);
+};
+var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styled$Internal$css;
+var $rtfeldman$elm_css$Css$displayFlex = A2($rtfeldman$elm_css$Css$property, 'display', 'flex');
+var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
+var $rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
+	return {$: 'ApplyStyles', a: a};
+};
+var $rtfeldman$elm_css$Css$Internal$property = F2(
+	function (key, value) {
+		return $rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
+	});
+var $rtfeldman$elm_css$Css$Internal$getOverloadedProperty = F3(
+	function (functionName, desiredKey, style) {
+		getOverloadedProperty:
+		while (true) {
+			switch (style.$) {
+				case 'AppendProperty':
+					var str = style.a;
+					var key = A2(
+						$elm$core$Maybe$withDefault,
+						'',
+						$elm$core$List$head(
+							A2($elm$core$String$split, ':', str)));
+					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, key);
+				case 'ExtendSelector':
+					var selector = style.a;
+					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-selector'));
+				case 'NestSnippet':
+					var combinator = style.a;
+					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-combinator'));
+				case 'WithPseudoElement':
+					var pseudoElement = style.a;
+					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-pseudo-element setter'));
+				case 'WithMedia':
+					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-media-query'));
+				case 'WithKeyframes':
+					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-keyframes'));
+				default:
+					if (!style.a.b) {
+						return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-empty-Style'));
+					} else {
+						if (!style.a.b.b) {
+							var _v1 = style.a;
+							var only = _v1.a;
+							var $temp$functionName = functionName,
+								$temp$desiredKey = desiredKey,
+								$temp$style = only;
+							functionName = $temp$functionName;
+							desiredKey = $temp$desiredKey;
+							style = $temp$style;
+							continue getOverloadedProperty;
+						} else {
+							var _v2 = style.a;
+							var first = _v2.a;
+							var rest = _v2.b;
+							var $temp$functionName = functionName,
+								$temp$desiredKey = desiredKey,
+								$temp$style = $rtfeldman$elm_css$Css$Preprocess$ApplyStyles(rest);
+							functionName = $temp$functionName;
+							desiredKey = $temp$desiredKey;
+							style = $temp$style;
+							continue getOverloadedProperty;
+						}
+					}
+			}
+		}
+	});
+var $rtfeldman$elm_css$Css$Internal$IncompatibleUnits = {$: 'IncompatibleUnits'};
+var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
+var $rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
+	function (units, unitLabel, numericValue) {
+		return {
+			absoluteLength: $rtfeldman$elm_css$Css$Structure$Compatible,
+			calc: $rtfeldman$elm_css$Css$Structure$Compatible,
+			flexBasis: $rtfeldman$elm_css$Css$Structure$Compatible,
+			fontSize: $rtfeldman$elm_css$Css$Structure$Compatible,
+			length: $rtfeldman$elm_css$Css$Structure$Compatible,
+			lengthOrAuto: $rtfeldman$elm_css$Css$Structure$Compatible,
+			lengthOrAutoOrCoverOrContain: $rtfeldman$elm_css$Css$Structure$Compatible,
+			lengthOrMinMaxDimension: $rtfeldman$elm_css$Css$Structure$Compatible,
+			lengthOrNone: $rtfeldman$elm_css$Css$Structure$Compatible,
+			lengthOrNoneOrMinMaxDimension: $rtfeldman$elm_css$Css$Structure$Compatible,
+			lengthOrNumber: $rtfeldman$elm_css$Css$Structure$Compatible,
+			lengthOrNumberOrAutoOrNoneOrContent: $rtfeldman$elm_css$Css$Structure$Compatible,
+			numericValue: numericValue,
+			textIndent: $rtfeldman$elm_css$Css$Structure$Compatible,
+			unitLabel: unitLabel,
+			units: units,
+			value: _Utils_ap(
+				$elm$core$String$fromFloat(numericValue),
+				unitLabel)
+		};
+	});
+var $rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty = A3($rtfeldman$elm_css$Css$Internal$lengthConverter, $rtfeldman$elm_css$Css$Internal$IncompatibleUnits, '', 0);
+var $rtfeldman$elm_css$Css$justifyContent = function (fn) {
+	return A3(
+		$rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
+		'justifyContent',
+		'justify-content',
+		fn($rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
+};
 var $rtfeldman$elm_css$VirtualDom$Styled$on = F2(
 	function (eventName, handler) {
 		return A3(
@@ -14282,14 +14426,8 @@ var $author$project$Wish$Cheat = {$: 'Cheat'};
 var $author$project$Wish$ToggleIndicesHint = function (a) {
 	return {$: 'ToggleIndicesHint', a: a};
 };
+var $rtfeldman$elm_css$Css$absolute = {position: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'absolute'};
 var $elm$json$Json$Encode$bool = _Json_wrap;
-var $elm$virtual_dom$VirtualDom$property = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_property,
-			_VirtualDom_noInnerHtmlOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
 var $rtfeldman$elm_css$VirtualDom$Styled$property = F2(
 	function (key, value) {
 		return A3(
@@ -14313,6 +14451,7 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
+var $rtfeldman$elm_css$Html$Styled$Attributes$class = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('className');
 var $rtfeldman$elm_css$Html$Styled$Attributes$for = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('htmlFor');
 var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
 var $rtfeldman$elm_css$Html$Styled$input = $rtfeldman$elm_css$Html$Styled$node('input');
@@ -14332,7 +14471,12 @@ var $rtfeldman$elm_css$Html$Styled$Events$onCheck = function (tagger) {
 		'change',
 		A2($elm$json$Json$Decode$map, tagger, $rtfeldman$elm_css$Html$Styled$Events$targetChecked));
 };
+var $rtfeldman$elm_css$Css$position = $rtfeldman$elm_css$Css$prop1('position');
+var $rtfeldman$elm_css$Css$PxUnits = {$: 'PxUnits'};
+var $rtfeldman$elm_css$Css$px = A2($rtfeldman$elm_css$Css$Internal$lengthConverter, $rtfeldman$elm_css$Css$PxUnits, 'px');
+var $rtfeldman$elm_css$Css$right = $rtfeldman$elm_css$Css$prop1('right');
 var $rtfeldman$elm_css$Html$Styled$span = $rtfeldman$elm_css$Html$Styled$node('span');
+var $rtfeldman$elm_css$Css$top = $rtfeldman$elm_css$Css$prop1('top');
 var $rtfeldman$elm_css$Html$Styled$Attributes$type_ = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('type');
 var $author$project$Wish$viewHints = F2(
 	function (_v0, puzzle) {
@@ -14353,45 +14497,71 @@ var $author$project$Wish$viewHints = F2(
 						$rtfeldman$elm_css$Html$Styled$text('solve')
 					]))
 			]) : _List_Nil;
-		return $elm$core$List$concat(
-			_List_fromArray(
-				[
-					_List_fromArray(
+		return _List_fromArray(
+			[
+				A2(
+				$rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
 					[
-						A2(
-						$rtfeldman$elm_css$Html$Styled$span,
-						_List_Nil,
+						$rtfeldman$elm_css$Html$Styled$Attributes$class('hints'),
+						$rtfeldman$elm_css$Html$Styled$Attributes$css(
 						_List_fromArray(
 							[
-								A2(
-								$rtfeldman$elm_css$Html$Styled$label,
-								_List_fromArray(
-									[
-										$rtfeldman$elm_css$Html$Styled$Attributes$for('indices')
-									]),
-								_List_fromArray(
-									[
-										$rtfeldman$elm_css$Html$Styled$text('show indices')
-									])),
-								A2(
-								$rtfeldman$elm_css$Html$Styled$input,
-								_List_fromArray(
-									[
-										$rtfeldman$elm_css$Html$Styled$Events$onCheck($author$project$Wish$ToggleIndicesHint),
-										$rtfeldman$elm_css$Html$Styled$Attributes$type_('checkbox'),
-										$rtfeldman$elm_css$Html$Styled$Attributes$checked(indices),
-										$rtfeldman$elm_css$Html$Styled$Attributes$id('indices')
-									]),
-								_List_Nil)
+								$rtfeldman$elm_css$Css$position($rtfeldman$elm_css$Css$absolute),
+								$rtfeldman$elm_css$Css$top(
+								$rtfeldman$elm_css$Css$px(0)),
+								$rtfeldman$elm_css$Css$right(
+								$rtfeldman$elm_css$Css$px(0))
 							]))
 					]),
-					solveHint
-				]));
+				$elm$core$List$concat(
+					_List_fromArray(
+						[
+							_List_fromArray(
+							[
+								A2(
+								$rtfeldman$elm_css$Html$Styled$span,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rtfeldman$elm_css$Html$Styled$label,
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Html$Styled$Attributes$for('indices')
+											]),
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Html$Styled$text('show indices')
+											])),
+										A2(
+										$rtfeldman$elm_css$Html$Styled$input,
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Html$Styled$Events$onCheck($author$project$Wish$ToggleIndicesHint),
+												$rtfeldman$elm_css$Html$Styled$Attributes$type_('checkbox'),
+												$rtfeldman$elm_css$Html$Styled$Attributes$checked(indices),
+												$rtfeldman$elm_css$Html$Styled$Attributes$id('indices')
+											]),
+										_List_Nil)
+									]))
+							]),
+							solveHint
+						])))
+			]);
 	});
 var $author$project$Wish$viewControl = function (data) {
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				$rtfeldman$elm_css$Html$Styled$Attributes$css(
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Css$displayFlex,
+						$rtfeldman$elm_css$Css$justifyContent($rtfeldman$elm_css$Css$center)
+					]))
+			]),
 		A2(
 			$elm$core$List$cons,
 			A2(
@@ -14559,144 +14729,13 @@ var $rtfeldman$elm_css$VirtualDom$Styled$map = F2(
 		}
 	});
 var $rtfeldman$elm_css$Html$Styled$map = $rtfeldman$elm_css$VirtualDom$Styled$map;
-var $rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
-	return {$: 'AppendProperty', a: a};
-};
-var $rtfeldman$elm_css$Css$property = F2(
-	function (key, value) {
-		return $rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
-	});
-var $rtfeldman$elm_css$Css$prop1 = F2(
-	function (key, arg) {
-		return A2($rtfeldman$elm_css$Css$property, key, arg.value);
-	});
 var $rtfeldman$elm_css$Css$boxSizing = $rtfeldman$elm_css$Css$prop1('box-sizing');
-var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
 var $rtfeldman$elm_css$Css$contentBox = {backgroundClip: $rtfeldman$elm_css$Css$Structure$Compatible, boxSizing: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'content-box'};
-var $rtfeldman$elm_css$VirtualDom$Styled$murmurSeed = 15739;
-var $rtfeldman$elm_css$VirtualDom$Styled$getClassname = function (styles) {
-	return $elm$core$List$isEmpty(styles) ? 'unstyled' : A2(
-		$elm$core$String$cons,
-		_Utils_chr('_'),
-		$rtfeldman$elm_hex$Hex$toString(
-			A2(
-				$rtfeldman$elm_css$ElmCssVendor$Murmur3$hashString,
-				$rtfeldman$elm_css$VirtualDom$Styled$murmurSeed,
-				$rtfeldman$elm_css$Css$Preprocess$Resolve$compile(
-					$elm$core$List$singleton(
-						$rtfeldman$elm_css$Css$Preprocess$stylesheet(
-							$elm$core$List$singleton(
-								A2(
-									$rtfeldman$elm_css$VirtualDom$Styled$makeSnippet,
-									styles,
-									$rtfeldman$elm_css$Css$Structure$UniversalSelectorSequence(_List_Nil)))))))));
-};
-var $rtfeldman$elm_css$Html$Styled$Internal$css = function (styles) {
-	var classname = $rtfeldman$elm_css$VirtualDom$Styled$getClassname(styles);
-	var classProperty = A2(
-		$elm$virtual_dom$VirtualDom$property,
-		'className',
-		$elm$json$Json$Encode$string(classname));
-	return A3($rtfeldman$elm_css$VirtualDom$Styled$Attribute, classProperty, styles, classname);
-};
-var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styled$Internal$css;
-var $rtfeldman$elm_css$Css$displayFlex = A2($rtfeldman$elm_css$Css$property, 'display', 'flex');
 var $rtfeldman$elm_css$Css$flexWrap = $rtfeldman$elm_css$Css$prop1('flex-wrap');
 var $rtfeldman$elm_css$Css$height = $rtfeldman$elm_css$Css$prop1('height');
-var $rtfeldman$elm_css$Css$PxUnits = {$: 'PxUnits'};
-var $rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
-	function (units, unitLabel, numericValue) {
-		return {
-			absoluteLength: $rtfeldman$elm_css$Css$Structure$Compatible,
-			calc: $rtfeldman$elm_css$Css$Structure$Compatible,
-			flexBasis: $rtfeldman$elm_css$Css$Structure$Compatible,
-			fontSize: $rtfeldman$elm_css$Css$Structure$Compatible,
-			length: $rtfeldman$elm_css$Css$Structure$Compatible,
-			lengthOrAuto: $rtfeldman$elm_css$Css$Structure$Compatible,
-			lengthOrAutoOrCoverOrContain: $rtfeldman$elm_css$Css$Structure$Compatible,
-			lengthOrMinMaxDimension: $rtfeldman$elm_css$Css$Structure$Compatible,
-			lengthOrNone: $rtfeldman$elm_css$Css$Structure$Compatible,
-			lengthOrNoneOrMinMaxDimension: $rtfeldman$elm_css$Css$Structure$Compatible,
-			lengthOrNumber: $rtfeldman$elm_css$Css$Structure$Compatible,
-			lengthOrNumberOrAutoOrNoneOrContent: $rtfeldman$elm_css$Css$Structure$Compatible,
-			numericValue: numericValue,
-			textIndent: $rtfeldman$elm_css$Css$Structure$Compatible,
-			unitLabel: unitLabel,
-			units: units,
-			value: _Utils_ap(
-				$elm$core$String$fromFloat(numericValue),
-				unitLabel)
-		};
-	});
-var $rtfeldman$elm_css$Css$px = A2($rtfeldman$elm_css$Css$Internal$lengthConverter, $rtfeldman$elm_css$Css$PxUnits, 'px');
 var $author$project$Puzzle$Slide = function (a) {
 	return {$: 'Slide', a: a};
 };
-var $rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
-	return {$: 'ApplyStyles', a: a};
-};
-var $rtfeldman$elm_css$Css$Internal$property = F2(
-	function (key, value) {
-		return $rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
-	});
-var $rtfeldman$elm_css$Css$Internal$getOverloadedProperty = F3(
-	function (functionName, desiredKey, style) {
-		getOverloadedProperty:
-		while (true) {
-			switch (style.$) {
-				case 'AppendProperty':
-					var str = style.a;
-					var key = A2(
-						$elm$core$Maybe$withDefault,
-						'',
-						$elm$core$List$head(
-							A2($elm$core$String$split, ':', str)));
-					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, key);
-				case 'ExtendSelector':
-					var selector = style.a;
-					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-selector'));
-				case 'NestSnippet':
-					var combinator = style.a;
-					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-combinator'));
-				case 'WithPseudoElement':
-					var pseudoElement = style.a;
-					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-pseudo-element setter'));
-				case 'WithMedia':
-					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-media-query'));
-				case 'WithKeyframes':
-					return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-keyframes'));
-				default:
-					if (!style.a.b) {
-						return A2($rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-empty-Style'));
-					} else {
-						if (!style.a.b.b) {
-							var _v1 = style.a;
-							var only = _v1.a;
-							var $temp$functionName = functionName,
-								$temp$desiredKey = desiredKey,
-								$temp$style = only;
-							functionName = $temp$functionName;
-							desiredKey = $temp$desiredKey;
-							style = $temp$style;
-							continue getOverloadedProperty;
-						} else {
-							var _v2 = style.a;
-							var first = _v2.a;
-							var rest = _v2.b;
-							var $temp$functionName = functionName,
-								$temp$desiredKey = desiredKey,
-								$temp$style = $rtfeldman$elm_css$Css$Preprocess$ApplyStyles(rest);
-							functionName = $temp$functionName;
-							desiredKey = $temp$desiredKey;
-							style = $temp$style;
-							continue getOverloadedProperty;
-						}
-					}
-			}
-		}
-	});
-var $rtfeldman$elm_css$Css$Internal$IncompatibleUnits = {$: 'IncompatibleUnits'};
-var $rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty = A3($rtfeldman$elm_css$Css$Internal$lengthConverter, $rtfeldman$elm_css$Css$Internal$IncompatibleUnits, '', 0);
 var $rtfeldman$elm_css$Css$alignItems = function (fn) {
 	return A3(
 		$rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
@@ -14752,16 +14791,8 @@ var $rtfeldman$elm_css$Css$rgb = F3(
 var $author$project$Puzzle$gray = function (g) {
 	return A3($rtfeldman$elm_css$Css$rgb, g, g, g);
 };
-var $rtfeldman$elm_css$Css$justifyContent = function (fn) {
-	return A3(
-		$rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
-		'justifyContent',
-		'justify-content',
-		fn($rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
-};
 var $rtfeldman$elm_css$Css$left = $rtfeldman$elm_css$Css$prop1('left');
 var $rtfeldman$elm_css$Css$solid = {borderStyle: $rtfeldman$elm_css$Css$Structure$Compatible, textDecorationStyle: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'solid'};
-var $rtfeldman$elm_css$Css$top = $rtfeldman$elm_css$Css$prop1('top');
 var $rtfeldman$elm_css$Css$url = function (urlValue) {
 	return {backgroundImage: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'url(' + (urlValue + ')')};
 };
@@ -14875,10 +14906,23 @@ var $author$project$Puzzle$view = F2(
 				[cells]));
 	});
 var $author$project$Wish$viewPuzzle = function (model) {
-	return A2(
+	var content = A2(
 		$rtfeldman$elm_css$Html$Styled$map,
 		$author$project$Wish$PuzzleMsg,
 		A3($elm$core$Basics$apL, $author$project$Puzzle$view, model.configuration, model.puzzle));
+	return A2(
+		$rtfeldman$elm_css$Html$Styled$div,
+		_List_fromArray(
+			[
+				$rtfeldman$elm_css$Html$Styled$Attributes$css(
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Css$displayFlex,
+						$rtfeldman$elm_css$Css$justifyContent($rtfeldman$elm_css$Css$center)
+					]))
+			]),
+		_List_fromArray(
+			[content]));
 };
 var $rtfeldman$elm_css$VirtualDom$Styled$unstyledNode = $rtfeldman$elm_css$VirtualDom$Styled$Unstyled;
 var $rtfeldman$elm_css$Html$Styled$fromUnstyled = $rtfeldman$elm_css$VirtualDom$Styled$unstyledNode;
@@ -14900,7 +14944,13 @@ var $elm_explorations$markdown$Markdown$toHtmlWith = _Markdown_toHtml;
 var $elm_explorations$markdown$Markdown$toHtml = $elm_explorations$markdown$Markdown$toHtmlWith($elm_explorations$markdown$Markdown$defaultOptions);
 var $author$project$Wish$viewWish = function (model) {
 	return $rtfeldman$elm_css$Html$Styled$fromUnstyled(
-		A2($elm_explorations$markdown$Markdown$toHtml, _List_Nil, model.configuration.wish.message));
+		A2(
+			$elm_explorations$markdown$Markdown$toHtml,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('message')
+				]),
+			model.configuration.wish.message));
 };
 var $author$project$Wish$viewBody = function (model) {
 	switch (model.$) {
@@ -14933,7 +14983,6 @@ var $author$project$Wish$viewBody = function (model) {
 				]);
 	}
 };
-var $rtfeldman$elm_css$Html$Styled$Attributes$class = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('className');
 var $author$project$Wish$wrap = function (content) {
 	return _List_fromArray(
 		[
